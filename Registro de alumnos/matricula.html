@@ -16,17 +16,11 @@
    <div class ="container-fluid" >
      <form @submit.prevent="guardarAlumno"method="post" id="frmAlumno" >
            <div class="card mb-3">
-               <div class="card -header text-white bg-secondary ">
-                  Registro de Alumnos
+               <div class="card -header text-white bg-secondary">
+                  Matricula de Alumnos
                   
                </div>
-               <div class="card-body">
-                 <div class="row p-1">
-                  <div class="col col-md-1">Codigo</div>
-                <div class="col col-md-2">
-                    <input v-model="alumno.codigo" placeholder="Codigo" pattern="[A-Z0-9]{3,10}" required title="Codigo de alumno" class="form-control" type="text">
-                 </div>
-             </div>
+          
              
                 <div class="row p-1">
                  <div class="col col-md-1">Nombre</div>
@@ -41,12 +35,8 @@
                    <input v-model="alumno.apellido" placeholder="Apellido" pattern="[A-Za-zÑñáéíóú ]{3,75}" required title="Apellido alumno" class="form-control" type="text">
                 </div>
             </div>
-            <div class="row p-1">
-                <div class="col col-md-1">Direccion</div>
-                <div class="col col-md-2">
-                    <input v-model="alumno.direccion" placeholder="Direccion" pattern="[A-Za-z0-9Ññáéíóú ]{3,100}" required title="Direccion de alumno" class="form-control" type="text">
-                </div>
-            </div>
+         
+         
             <div class="row p-1">
                 <div class="col col-md-1">Telefono</div>
                 <div class="col col-md-2">
@@ -56,20 +46,22 @@
             <div class="row p-1">
                 <div class="col col-md-1">Email</div>
                 <div class="col col-md-2">
-                    <input v-model="alumno.email" placeholder="Email" type="email"
-                     required title="Email de alumno" class="form-control" type="text">
+                    <input v-model="alumno.email" placeholder="Email" pattern="/^(([^<>()\[\]\.,;:\s@\”]+(\.[^<>() \[\]\.,;:\s@\”]+)*)|(\”.+\”))@(([^<>()[\]\.,;:\s@\ ”]+\.)+[^<>()[\]\.,;:\s@\”]{2,})$/
+                    " required title="Email de alumno" class="form-control" type="text">
                    
                 </div>
             </div>
             <div class="row p-1">
-                <div class="col col-md-1">Fecha Nacimiento</div>
-                <div class="col col-md-2">
-                    <input v-model="alumno.fechan" placeholder="Fecha Nacimiento" 
-                    required title="fechan de alumno" class="form-control" type="date">
-                   
-                </div>
-            </div>
-            <div class="row">
+                <div class="col col-md-1">Elegir Carrera</div>
+                
+                <select  class="col-md-2">required>
+                    <option >Seleccione</option>
+                    <option >Ing.En Sistemas y Redes Informaticas</option>
+                    <option >Adm. De empresas</option>
+                    <option >Lic. En turismo</option>
+                </select>
+                
+               </div>
                 <div class="col col-md-3 text-center">
                     <div class="alert alert-danger d-flex align-items-center" role="alert">
                         Mensaje...
@@ -79,12 +71,12 @@
             </div>
             <div class="row">
                 <div class="col col-md-5 text-center">
-                    <button  class="btn btn-success"style="border-radius: 10px; color: white; border-color: white; margin-top: 10px">Guardar</button>
-                    <button  class="btn btn-primary" style="border-radius: 10px; color: white; border-color: white; margin-top: 10px">Nuevo</button>
-                    <a href="matricula.html" class="btn btn-dark" style="border-radius: 10px; color: white; border-color: white; margin-top: 10px;">Matricular</a>
+                    <button type="submit" class="btn btn-success" style="border-radius: 10px; color: white; border-color: white; margin-top: 10px;">Guardar</button>
+                    <button type="reset" class="btn btn-secondary" style="border-radius: 10px; color: white; border-color: white; margin-top: 10px;">Nuevo</button>
+                    <a href="ins_materia.html" class="btn btn-info" style="border-radius: 10px; color: white; border-color: white; margin-top: 10px;">Inscripcion de Materias</a>
                 </a>
-                <a href="ins_materia.html" class="btn btn-info" style="border-radius: 10px; color: white; border-color: white; margin-top: 10px;">Inscribir Materias</a>
-            </a>
+                    <a href="alumnos.html" class="btn btn-danger" style="border-radius: 10px; color: white; border-color: white; margin-top: 10px;">Regresar</a>
+                </a>
                 </div>
             </div>
         </div>

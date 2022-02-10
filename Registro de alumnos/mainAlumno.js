@@ -14,15 +14,22 @@ var app = new Vue({
             apellido: '',
             direccion: '',
             telefono: '',
-            email: ''
+            email: '',
+            fechan:'',
+            matricula:'',
+            idMatricula:'',
+            carrera:'',
+            fechai:'',
+
         },
+    
     },
     methods: {
         guardarAlumno(){
             db_alumno.transaction(tx=>{
-                tx.executeSql('INSERT INTO alumnos (codigo, nombre, apellido, direccion, telefono,email) VALUES (?,?,?,?,?,?)',
+                tx.executeSql('INSERT INTO alumnos (codigo, nombre, apellido, direccion, telefono,email, fechan) VALUES (?,?,?,?,?,?,?)',
                 [this.alumno.codigo, this.alumno.nombre, this.alumno.apellido ,this.alumno.direccion, this.alumno.telefono, 
-                    this.alumno.email],
+                    this.alumno.email,this.alumno.fechan],
                 (tx, results)=>{
                     this.alumno.msg = 'Alumno guardado con exito';
                     this.nuevoAlumno();
@@ -41,12 +48,13 @@ var app = new Vue({
             this.alumno.direccion = '';
             this.alumno.telefono = '';
             this.alumno.email = '';
+            this.alumno.fechan='';
         }
     },
     created(){
         db_alumno.transaction(tx=>{
             tx.executeSql('CREATE TABLE IF NOT EXISTS alumnos (idAlumno INTEGER PRIMARY KEY AUTOINCREMENT, '+
-                'codigo char(10), nombre char(75), apellido char(75), direccion TEXT, telefono char(10), email char(75))');
+                'codigo char(10), nombre char(75), apellido char(75), direccion TEXT, telefono char(10), email char(75), fechan date)');
         }, err=>{
             console.log('Error al crear la tabla de alumnos', err);
         });
