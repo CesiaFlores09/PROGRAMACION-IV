@@ -14,7 +14,7 @@
 <body>
    <div id="appAlumno">
    <div class ="container-fluid" >
-     <form @submit.prevent="guardarAlumno"method="post" id="frmAlumno" >
+     <form @submit.prevent="guardarAlumno" @reset.prevent="nuevoAlumno"method="post" id="frmAlumno" >
            <div class="card mb-3">
                <div class="card -header text-white bg-secondary ">
                   Registro de Alumnos
@@ -72,7 +72,7 @@
             <div class="row">
                 <div class="col col-md-3 text-center">
                     <div class="alert alert-danger d-flex align-items-center" role="alert">
-                        Mensaje...
+                        {{alumno.msg}}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 </div>
@@ -89,7 +89,49 @@
             </div>
         </div>
        </form>
+       <div class="card mb-3" id="cardBuscarAlumno">
+        <div class="card-header text-white bg-dark">
+            Busqueda de Alumnos
 
+            <button type="button" class="btn-close bg-white" data-bs-dismiss="alert" data-bs-target="#cardBuscarAlumno" aria-label="Close"></button>
+        </div>
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td colspan="7">
+                            Buscar: <input title="Introduzca el texto a buscar" @keyup="buscarAlumno" v-model="buscar" class="form-control" type="text">
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Direccion</th>
+                        <th>Telefono</th>
+                        <th>Email</th>
+                        <th>Fecha Nacimiento</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in alumnos" :key="item.idAlumno" @click="modificarAlumno(item)">
+                        <td>{{item.codigo}}</td>
+                        <td>{{item.nombre}}</td>
+                        <td>{{item.apellido}}</td>
+                        <td>{{item.direccion}}</td>
+                        <td>{{item.telefono}}</td>
+                        <td>{{item.email}}</td>
+                        <td>{{item.fechan}}</td>
+                        <td>
+                            <button type="button" class="btn btn-danger" @click="eliminarAlumno(item)">Eliminar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+       </div>
    </div>
    </div>
 </div>
