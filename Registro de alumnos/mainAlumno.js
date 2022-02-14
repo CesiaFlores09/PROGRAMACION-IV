@@ -17,11 +17,8 @@ var app = new Vue({
             direccion: '',
             telefono: '',
             email: '',
-            fechan:'',
-            matricula:'',
-            idMatricula:'',
-            carrera:'',
-            fechai:''
+            fechan:''
+         
 
         },
     
