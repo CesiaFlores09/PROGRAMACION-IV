@@ -70,7 +70,7 @@ Vue.component('alumno',{
         this.obtenerAlumnos();
     },
     template:`
-        <div id="appCiente">
+        <div id="appSistema">
             <div class="card text-white" id="carAlumno">
                 <div class="card-header bg-primary">
                     Registro de Alumnos
@@ -106,7 +106,7 @@ Vue.component('alumno',{
                         <div class="row p-1">
                         <div class="col col-md-2">Fecha Nacimiento:</div>
                         <div class="col col-md-2">
-                            <input title="Ingrese la fecha de nacimiento" v-model="alumno.fecha_nacimeinto" required type="date" class="form-control">
+                            <input title="Ingrese la fecha de nacimiento" v-model="alumno.fecha_nacimiento" required type="date" class="form-control">
                         </div>
                     </div>
                        
@@ -138,7 +138,7 @@ Vue.component('alumno',{
                         <thead>
                             <tr>
                                 <th colspan="6">
-                                    Buscar: <input @keyup="buscandoAlumno" v-model="buscar" placeholder="buscar aqui" class="form-control" type="text" >
+                                    Buscar: <input @keyup="buscandoAlumno" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
                                 </th>
                             </tr>
                             <tr>

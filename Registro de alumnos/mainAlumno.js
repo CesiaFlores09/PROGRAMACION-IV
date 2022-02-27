@@ -8,7 +8,7 @@ var appSistemaAcademico = new Vue({
         forms:{
             'alumno':{mostrar:false},
             'matricula':{mostrar:false},
-            'materia':{mostrar:false},
+            
             
             
         }
