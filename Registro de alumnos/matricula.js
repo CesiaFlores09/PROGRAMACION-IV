@@ -85,7 +85,7 @@ Vue.component('matricula',{
     template:`
         <div id="appSistema">
             <div class="card text-white" id="carmatricula">
-                <div class="card-header bg-primary">
+                <div class="card text-white bg-danger">
                     Registro de matriculas
 
                     <button type="button" class="btn-close text-end" data-bs-dismiss="alert" data-bs-target="#carmatricula" aria-label="Close"></button>
@@ -104,30 +104,18 @@ Vue.component('matricula',{
                             </div>
 
                         </div>
+                        <div class="row p-1">
+                        <div class="col col-md-2">Ciclo:</div>
+                        <div class="col col-md-3">
+                            <input title="Ingrese el ciclo" v-model="matricula.ciclo" pattern="[A-Za-zñÑáéíóúü ]{3,100}" required type="text" class="form-control">
+                        </div>
+                    </div>
                    
                   
-                        <div class="row p-1">
-                        <div class="col-auto">
-                        <label Ciclo </label>
-                        <select  class="form-control" required>
-                            <option value="">Seleccione El ciclo</option>
-                            <option value="U">I</option>
-                            <option value="D">II</option>
-                            <option value="T">III</option>
-                            <option value="C">IV</option>
-                            <option value="CI">V</option>
-                            <option value="SE">VI</option>
                             
-                            <option value="S">VII</option>
-                            <option value="O">VIII</option>
-                            <option value="N">IX</option>
-                            <option value="D">X</option>
-                            
-                            <input title="Ingrese El ciclo" v-model="matricula.ciclo"  class="form-control">
-                        </select>
-                       </div>
+                       
                      
-                    </div>
+                
                         <div class="row p-1">
                         <div class="col col-md-2">Fecha Matricula:</div>
                         <div class="col col-md-3">
@@ -145,15 +133,22 @@ Vue.component('matricula',{
                         </div>
                         <div class="row m-2">
                             <div class="col col-md-5 text-center">
-                                <input class="btn btn-success" type="submit" value="Guardar">
-                                <input class="btn btn-warning" type="reset" value="Nuevo">
+                               <button class="btn btn-success" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-check-fill" viewBox="0 0 16 16">
+                               <path fill-rule="evenodd" d="M15.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L12.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                               <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                             </svg> Guardar</button>
+                                
+                                  <button class="btn btn-primary" type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                                  <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                                  <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                                </svg>Nuevo</button>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
             <div class="card text-white" id="carBuscarmatricula">
-                <div class="card-header bg-primary">
+                <div class="card text-white bg-danger">
                     Busqueda de matriculas
 
                     <button type="button" class="btn-close" data-bs-dismiss="alert" data-bs-target="#carBuscarmatricula" aria-label="Close"></button>
@@ -183,7 +178,9 @@ Vue.component('matricula',{
                               
                                 
                                 <td>
-                                    <button class="btn btn-danger" @click="eliminarmatricula(item)">Eliminar</button>
+                                    <button class="btn btn-danger" @click="eliminarmatricula(item)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
+                                  </svg> Eliminar</button>
                                 </td>
                             </tr>
                         </tbody>
