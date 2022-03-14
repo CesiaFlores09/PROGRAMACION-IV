@@ -22,16 +22,15 @@ Vue.component('cliente',{
         },
         eliminarCliente(cliente){
             if( confirm(`Esta seguro de eliminar el cliente ${cliente.nombre}?`) ){
-                let store = abrirStore ('cliente', 'readwrite'),
-                  query = store.delete(cliente.idCliente);
+               let store = abrirStore('cliente', 'readwrite'),
+                   query = store.delete(cliente.idCliente);
                 query.onsuccess = e=>{
                     this.nuevoCliente();
                     this.obtenerDatos();
-                    this.cliente.msg ='Cliente eliminado con exito';
-
+                    this.cliente.msg = 'Cliente eliminado con exito';
                 };
-                query.onerror=e=>{
-                    this.cliente.msg=`Error al eliminar el cliente ${e.target.error}`;
+                query.onerror = e=>{
+                    this.cliente.msg = `Error al eliminar el cliente ${e.target.error}`;
                 };
             }
             this.nuevoCliente();
@@ -42,35 +41,37 @@ Vue.component('cliente',{
         },
         guardarCliente(){
             let store = abrirStore('cliente', 'readwrite');
-           
             if(this.cliente.accion=="nuevo"){
                 this.cliente.idCliente = generarIdUnicoFecha();
-                
-            } 
+            }
             let query = store.put(this.cliente);
-            query.onsuccess =e=>{
-            this.nuevoCliente();
-            this.obtenerDatos();
-            this.cliente.msg = 'Cliente procesado con exito';
-
+            query.onsuccess = e=>{
+                fetch(`private/modulos/cliente/cliente.php?accion=${this.cliente.accion}
+                    &datos=${JSON.stringify(this.cliente)}`, {credentials: 'same-origin'})
+                    .then(res=>res.json())
+                    .then(data=>{
+                        this.cliente.msg = `Cliente procesado ${data.msg}`;
+                    })
+                    .error(err=>{
+                        this.cliente.msg = `Error al guardar el cliente ${err}`;
+                    });
+                this.nuevoCliente();
+                this.obtenerDatos();
+                this.cliente.msg = 'Cliente procesado con exito';
             };
             query.onerror = e=>{
-                this.cliente.msg =`Error al procesar el cliente ${e.target.error}`;
-            }
-
-            
+                this.cliente.msg = `Error al procesar el cliente ${e.target.error}`;
+            };
         },
         obtenerDatos(valor=''){
             let store = abrirStore('cliente', 'readonly'),
-             data = store.getAll();
+                data = store.getAll();
             data.onsuccess = e=>{
                 this.clientes = data.result.filter(cliente=>cliente.nombre.toLowerCase().indexOf(valor.toLowerCase())>-1);
-
             };
             data.onerror = e=>{
-                this.clientes.msg =`Error al obtener los clientes ${e.target.error}`;
+                this.cliente.msg = `Error al obtener los clientes ${e.target.error}`;
             };
-            
         },
         nuevoCliente(){
             this.cliente.accion = 'nuevo';
