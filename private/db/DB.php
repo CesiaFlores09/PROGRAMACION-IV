@@ -1,5 +1,5 @@
 <?php
-include('confing.php');
-$conexion = new DB('localhost', 'root', '');
+include('config.php');
+$conexion = new DB('mysql:host=localhost; charset=utf8', 'root', '');
 
 ?>
