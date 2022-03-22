@@ -18,25 +18,19 @@ class alumno{
         return $this->validar_datos();
     }
     private function validar_datos(){
-        if( empty(trim($this->datos['Codigo'])) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el Codigo';
+        if( empty(trim($this->datos['codigo'])) ){
+            $this->respuesta['msg'] = 'Por favor ingrese el codigo';
         }
-        if( empty(trim($this->datos['Nombre'])) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el Nombre';
+        if( empty(trim($this->datos['nombre'])) ){
+            $this->respuesta['msg'] = 'Por favor ingrese el nombre';
         }
-        if( empty(trim($this->datos['Apellido'])) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el Apellido';
+        if( empty(trim($this->datos['direccion'])) ){
+            $this->respuesta['msg'] = 'Por favor ingrese la direccion';
         }
-        if( empty(trim($this->datos['Direccion'])) ){
-            $this->respuesta['msg'] = 'Por favor ingrese la Direccion';
+        if( empty(trim($this->datos['telefono'])) ){
+            $this->respuesta['msg'] = 'Por favor ingrese el telefono';
         }
-        if( empty(trim($this->datos['Telefono'])) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el Telefono';
-        }
-        if( empty(trim($this->datos['Email'])) ){
-            $this->respuesta['msg'] = 'Por favor ingrese el Email';
-        }
-            if( empty(trim($this->datos['Fecha Nacimiento'])) ){
+            if( empty(trim($this->datos['fecha_nacimiento'])) ){
                 $this->respuesta['msg'] = 'Por favor ingrese la fecha de nacimiento';
         }
         return $this->almacenar_datos();
@@ -44,17 +38,17 @@ class alumno{
     private function almacenar_datos(){
         if( $this->respuesta['msg']=='correcto' ){
             if( $this->datos['accion']=='nuevo' ){
-                $this->db->consultas('INSERT INTO db_sistema_alumno.alumnos(idalumno, Codigo, Nombre, Apellido, Direccion, Telefono, Email, Fecha Nacimiento) 
-                    VALUES(?,?,?,?,?,?,?,?)',
-                    $this->datos['idalumno'], $this->datos['Codigo'],$this->datos['Nombre'],$this->datos['Apellido'],
-                    $this->datos['Direccion'], $this->datos['Telefono'], $this->datos['Email'], $this->datos['Fecha Nacimiento']
+                $this->db->consultas('INSERT INTO db_sistema_alumno.alumnos(idalumno, codigo, nombre, direccion, telefono, fecha_nacimiento) 
+                    VALUES(?,?,?,?,?,?,)',
+                    $this->datos['idalumno'], $this->datos['codigo'],$this->datos['nombre'],
+                    $this->datos['direccion'], $this->datos['telefono'], $this->datos['fecha_nacimiento']
                 );
                 return $this->db->obtenerUltimoId();
             }else if( $this->datos['accion']=='modificar' ){
-                $this->db->consultas('UPDATE db_sistema_alumno.alumnos SET Codigo=?, Nombre=?, Apellido=?, Direccion=?, Telefono=?, Email=?, Fecha Nacimmiento=?
+                $this->db->consultas('UPDATE db_sistema_alumno.alumnos SET codigo=?, nombre=?, direccion=?, telefono=?, Fecha Nacimmiento=?
                     WHERE idalumno=?',
-                    $this->datos['Codigo'],$this->datos['Nombre'],$this->datos['Apellido'],
-                    $this->datos['Direccion'], $this->datos['Telefono'], $this->datos['Email'], $this->datos['Fecha Nacimiento'], $this->datos['idalumno']
+                    $this->datos['codigo'],$this->datos['nombre'],
+                    $this->datos['direccion'], $this->datos['telefono'], $this->datos['fecha_nacimiento'], $this->datos['idalumno']
                 );
                 return $this->datos['idalumno'];
             }else if( $this->datos['accion']=='eliminar' ){
