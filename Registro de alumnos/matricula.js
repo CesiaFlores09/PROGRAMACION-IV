@@ -4,72 +4,89 @@ Vue.component('matricula',{
         return {
             buscar:'',
             matriculas:[],
+            alumnos:[],
             matricula:{
                 accion : 'nuevo',
                 mostrar_msg : false,
                 msg : '',
-                alumno:{
+                alumno: {
                     id: '',
-                    label:'',
-
+                    label: '',
                 },
                 idMatricula : '',
                 alumn: '',
                 ciclo: '',
-                fecha_m:'',
-                
+                fecha_m : '',
+               
             }
         }
     },
     methods:{
-        buscandomatricula(){
-            this.obtenermatriculas(this.buscar);
+        buscandoMatricula(){
+          
+            this.obtenerDatos(this.buscar);
         },
-        eliminarmatricula(matricula){
-            if( confirm(`Esta seguro de eliminar la Matricula ${matricula.alumn}?`) ){
-                this.matricula.accion = 'eliminar';
-                this.matricula.idMatricula = matricula.idMatricula;
-                this.guardarmatricula();
+        eliminarMatricula(matricula){
+            if( confirm(`Esta seguro de eliminar la matricula de ${matricula.alumno}?`) ){
+               
+                let store = abrirStore('matricula', 'readwrite'),
+                query = store.delete(matricula.idMatricula);
+                query.onsuccess = e=>{
+                    this.nuevoMatricula();
+                    this.obtenerDatos();
+                    this.matricula.msg = 'Matricula eliminada con exito';
+                };
+                query.onerror = e=>{
+                    this.matricula.msg = `Error al eliminar la matricula ${e.target.error}`;
+                };
             }
-            this.nuevomatricula();
+            this.nuevoMatricula();
         },
-        modificarmatricula(datos){
+        modificarMatricula(datos){
             this.matricula = JSON.parse(JSON.stringify(datos));
             this.matricula.accion = 'modificar';
         },
-        guardarmatricula(){
-            this.obtenermatriculas();
-            let matriculas = JSON.parse(localStorage.getItem('matriculas')) || [];
+        guardarMatricula(){
+            let store = abrirStore('matricula','readwrite');
+        
             if(this.matricula.accion=="nuevo"){
                 this.matricula.idMatricula = generarIdUnicoFecha();
-                matriculas.push(this.matricula);
-            } else if(this.matricula.accion=="modificar"){
-                let index = matriculas.findIndex(matricula=>matricula.idMatricula==this.matricula.idMatricula);
-                matriculas[index] = this.matricula;
-            } else if( this.matricula.accion=="eliminar" ){
-                let index = matriculas.findIndex(matricula=>matricula.idMatricula==this.matricula.idMatricula);
-                matriculas.splice(index,1);
+               
             }
-            localStorage.setItem('matriculas', JSON.stringify(matriculas));
-            this.nuevomatricula();
-            this.obtenermatriculas();
-            this.matricula.msg = 'Matricula procesado con exito';
+            
+            let query = store.put(this.matricula);
+            query.onsuccess = e=>{
+                this.nuevoMatricula();
+                this.obtenerDatos();
+                this.matricula.msg = 'Error al procesar la matricula';
+                
+            };
+            query.onerror = e=>{
+                this.matricula.msg = `Error al procesar la matricula ${e.target.error}`;
+            };
         },
-        obtenermatriculas(valor=''){
-            this.matriculas = [];
-            let matriculas = JSON.parse(localStorage.getItem('matriculas')) || [];
-            this.matriculas = matriculas.filter(matricula=>matricula.alumn.toLowerCase().indexOf(valor.toLowerCase())>-1);
-        
-            this.alumnos =[];
-            let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
-            this.alumnos = alumnos.map(alumno =>{
-                return{
-                    id: alumno.idAlumno,
-                    label: alumno.nombre,
-                }
-            });
+     
+        obtenerDatos(valor=''){
+            let store = abrirStore('matricula', 'readonly'),
+                data = store.getAll();
+            data.onsuccess = e=>{
+                this.matriculas = data.result.filter(matricula=>matricula.alumn.toLowerCase().indexOf(valor.toLowerCase())>-1);
+            };
+            data.onerror = e=>{
+                console.log(e.target.error);
+            };
+            let store_cat = abrirStore('alumno', 'readonly'),
+                data_cat = store_cat.getAll();
+            data_cat.onsuccess = e=>{
+                this.alumnos = data_cat.result.map(alumno=>{
+                    return {
+                        id: alumno.idAlumno,
+                        label: alumno.nombre,
+                    }
+                });
+            };
         },
-        nuevomatricula(){
+        nuevoMatricula(){
             this.matricula.accion = 'nuevo';
             this.matricula.msg = '';
             this.matricula.idMatricula = '';
@@ -80,7 +97,8 @@ Vue.component('matricula',{
         }
     },
     created(){
-        this.obtenermatriculas();
+        this.obtenerDatos();
+       
     },
     template:`
         <div id="appSistema">
@@ -91,7 +109,7 @@ Vue.component('matricula',{
                     <button type="button" class="btn-close text-end" data-bs-dismiss="alert" data-bs-target="#carmatricula" aria-label="Close"></button>
                 </div>
                 <div class="card-body text-dark">
-                    <form method="post" @submit.prevent="guardarmatricula" @reset="nuevomatricula">
+                    <form method="post" @submit.prevent="guardarMatricula" @reset="nuevoMatricula">
                         <div class="row p-1">
                           <div class ="col col-md-2">
                              Alumno:
@@ -147,18 +165,18 @@ Vue.component('matricula',{
                     </form>
                 </div>
             </div>
-            <div class="card text-white" id="carBuscarmatricula">
+            <div class="card text-white" id="carBuscarMatricula">
                 <div class="card text-white bg-danger">
                     Busqueda de matriculas
 
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" data-bs-target="#carBuscarmatricula" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" data-bs-target="#carBuscarMatricula" aria-label="Close"></button>
                 </div>
                 <div class="card-body">
                     <table class="table table-dark table-hover">
                         <thead>
                             <tr>
                                 <th colspan="6">
-                                    Buscar: <input @keyup="buscandomatricula" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
+                                    Buscar: <input @keyup="buscandoMatricula" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
                                 </th>
                             </tr>
                             <tr>
@@ -166,19 +184,22 @@ Vue.component('matricula',{
                                
                                 <th>CICLO</th>
                                 <th>FECHA MATRICULA</th>
+                                <th>ALUMNO</th>
                              
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in matriculas" @click='modificarmatricula( item )' :key="item.idMatricula">
+                            <tr v-for="item in matriculas" @click='modificarMatricula( item )' :key="item.idMatricula">
                                 
                                 <td>{{item.ciclo}}</td>
                                 <td>{{item.fecha_m}}</td>
+                                <td>{{item.alumno.label}}</td>
+                                
                               
                                 
                                 <td>
-                                    <button class="btn btn-danger" @click="eliminarmatricula(item)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <button class="btn btn-danger" @click="eliminarMatricula(item)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                                     <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
                                   </svg> Eliminar</button>
                                 </td>

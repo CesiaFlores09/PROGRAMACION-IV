@@ -4,75 +4,92 @@ Vue.component('materia',{
         return {
             buscar:'',
             materias:[],
+            alumnos:[],
             materia:{
                 accion : 'nuevo',
                 mostrar_msg : false,
                 msg : '',
-                alumno:{
+                alumno: {
                     id: '',
-                    label:'',
-
+                    label: '',
                 },
                 idMateria : '',
                 alumn: '',
                 materia1: '',
-                materia2:'',
-                materia3:'',
-                materia4:'',
-                materia5:'',
-                
+                materia2 : '',
+                materia3 : '',
+                materia4 : '',
+                materia5 : '',
+               
             }
         }
     },
     methods:{
-        buscandomateria(){
-            this.obtenermaterias(this.buscar);
+        buscandoMateria(){
+          
+            this.obtenerDatos(this.buscar);
         },
-        eliminarmateria(materia){
-            if( confirm(`Esta seguro de eliminar la materia ${materia.alumn}?`) ){
-                this.materia.accion = 'eliminar';
-                this.materia.idMateria = materia.idMateria;
-                this.guardarmateria();
+        eliminarMateria(materia){
+            if( confirm(`Esta seguro de eliminar la materia de ${materia.alumno}?`) ){
+               
+                let store = abrirStore('materia', 'readwrite'),
+                query = store.delete(materia.idMateria);
+                query.onsuccess = e=>{
+                    this.nuevoMateria();
+                    this.obtenerDatos();
+                    this.materia.msg = 'Materia eliminada con exito';
+                };
+                query.onerror = e=>{
+                    this.materia.msg = `Error al eliminar la materia ${e.target.error}`;
+                };
             }
-            this.nuevomateria();
+            this.nuevoMateria();
         },
-        modificarmateria(datos){
+        modificarMateria(datos){
             this.materia = JSON.parse(JSON.stringify(datos));
             this.materia.accion = 'modificar';
         },
-        guardarmateria(){
-            this.obtenermaterias();
-            let materias = JSON.parse(localStorage.getItem('materias')) || [];
+        guardarMateria(){
+            let store = abrirStore('materia','readwrite');
+        
             if(this.materia.accion=="nuevo"){
                 this.materia.idMateria = generarIdUnicoFecha();
-                materias.push(this.materia);
-            } else if(this.materia.accion=="modificar"){
-                let index = materias.findIndex(materia=>materia.idMateria==this.materia.idMateria);
-                materias[index] = this.materia;
-            } else if( this.materia.accion=="eliminar" ){
-                let index = materias.findIndex(materia=>materia.idMateria==this.materia.idMateria);
-                materias.splice(index,1);
+               
             }
-            localStorage.setItem('materias', JSON.stringify(materias));
-            this.nuevomateria();
-            this.obtenermaterias();
-            this.materia.msg = 'materia procesado con exito';
+            
+            let query = store.put(this.materia);
+            query.onsuccess = e=>{
+                this.nuevoMateria();
+                this.obtenerDatos();
+                this.materia.msg = 'Error al procesar la materia';
+                
+            };
+            query.onerror = e=>{
+                this.materia.msg = `Error al procesar la materia ${e.target.error}`;
+            };
         },
-        obtenermaterias(valor=''){
-            this.materias = [];
-            let materias = JSON.parse(localStorage.getItem('materias')) || [];
-            this.materias = materias.filter(materia=>materia.alumn.toLowerCase().indexOf(valor.toLowerCase())>-1);
-        
-            this.alumnos =[];
-            let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
-            this.alumnos = alumnos.map(alumno =>{
-                return{
-                    id: alumno.idAlumno,
-                    label: alumno.nombre,
-                }
-            });
+     
+        obtenerDatos(valor=''){
+            let store = abrirStore('materia', 'readonly'),
+                data = store.getAll();
+            data.onsuccess = e=>{
+                this.materias = data.result.filter(materia=>materia.alumn.toLowerCase().indexOf(valor.toLowerCase())>-1);
+            };
+            data.onerror = e=>{
+                console.log(e.target.error);
+            };
+            let store_cat = abrirStore('alumno', 'readonly'),
+                data_cat = store_cat.getAll();
+            data_cat.onsuccess = e=>{
+                this.alumnos = data_cat.result.map(alumno=>{
+                    return {
+                        id: alumno.idAlumno,
+                        label: alumno.nombre,
+                    }
+                });
+            };
         },
-        nuevomateria(){
+        nuevoMateria(){
             this.materia.accion = 'nuevo';
             this.materia.msg = '';
             this.materia.idMateria = '';
@@ -86,7 +103,8 @@ Vue.component('materia',{
         }
     },
     created(){
-        this.obtenermaterias();
+        this.obtenerDatos();
+       
     },
     template:`
         <div id="appSistema">
@@ -97,7 +115,7 @@ Vue.component('materia',{
                     <button type="button" class="btn-close text-end" data-bs-dismiss="alert" data-bs-target="#carmateria" aria-label="Close"></button>
                 </div>
                 <div class="card-body text-dark">
-                    <form method="post" @submit.prevent="guardarmateria" @reset="nuevomateria">
+                    <form method="post" @submit.prevent="guardarMateria" @reset="nuevoMateria">
                         <div class="row p-1">
                           <div class ="col col-md-2">
                              Alumno:
@@ -180,8 +198,8 @@ Vue.component('materia',{
                     <table class="table table-dark table-hover">
                         <thead>
                             <tr>
-                                <th colspan="6">
-                                    Buscar: <input @keyup="buscandomateria" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
+                                <th colspan="7">
+                                    Buscar: <input @keyup="buscandoMateria" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
                                 </th>
                             </tr>
                             <tr>
@@ -192,22 +210,25 @@ Vue.component('materia',{
                                 <th>MATERIA 3</th>
                                 <th>MATERIA 4</th>
                                 <th>MATERIA 5</th>
+                                <th>ALUMNO</th>
                              
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in materias" @click='modificarmateria( item )' :key="item.idMateria">
+                            <tr v-for="item in materias" @click='modificarMateria( item )' :key="item.idMateria">
                                 
                                 <td>{{item.materia1}}</td>
                                 <td>{{item.materia2}}</td> 
                                 <td>{{item.materia3}}</td>   
                                 <td>{{item.materia4}}</td>  
-                                <td>{{item.materia5}}</td>  
+                                <td>{{item.materia5}}</td> 
+                                <td>{{item.alumno.label}}</td>
+
                               
                                 
                                 <td>
-                                    <button class="btn btn-danger" @click="eliminarmateria(item)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                                    <button class="btn btn-danger" @click="eliminarMateria(item)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                                     <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
                                   </svg> Eliminar</button>
                                 </td>

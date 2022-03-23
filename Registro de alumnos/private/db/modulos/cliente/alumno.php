@@ -38,22 +38,22 @@ class alumno{
     private function almacenar_datos(){
         if( $this->respuesta['msg']=='correcto' ){
             if( $this->datos['accion']=='nuevo' ){
-                $this->db->consultas('INSERT INTO db_sistema_alumno.alumnos(idalumno, codigo, nombre, direccion, telefono, fecha_nacimiento) 
+                $this->db->consultas('INSERT INTO db_sistema_alumno.alumnos(idAlumno, codigo, nombre, direccion, telefono, fecha_nacimiento) 
                     VALUES(?,?,?,?,?,?,)',
-                    $this->datos['idalumno'], $this->datos['codigo'],$this->datos['nombre'],
+                    $this->datos['idAlumno'], $this->datos['codigo'],$this->datos['nombre'],
                     $this->datos['direccion'], $this->datos['telefono'], $this->datos['fecha_nacimiento']
                 );
                 return $this->db->obtenerUltimoId();
             }else if( $this->datos['accion']=='modificar' ){
                 $this->db->consultas('UPDATE db_sistema_alumno.alumnos SET codigo=?, nombre=?, direccion=?, telefono=?, Fecha Nacimmiento=?
-                    WHERE idalumno=?',
+                    WHERE idAlumno=?',
                     $this->datos['codigo'],$this->datos['nombre'],
-                    $this->datos['direccion'], $this->datos['telefono'], $this->datos['fecha_nacimiento'], $this->datos['idalumno']
+                    $this->datos['direccion'], $this->datos['telefono'], $this->datos['fecha_nacimiento'], $this->datos['idAlumno']
                 );
-                return $this->datos['idalumno'];
+                return $this->datos['idAlumno'];
             }else if( $this->datos['accion']=='eliminar' ){
-                $this->db->consultas('DELETE FROM db_sistema_alumno.alumnos WHERE idalumno=?', $this->datos['idalumno']);
-                return $this->datos['idalumno'];
+                $this->db->consultas('DELETE FROM db_sistema_alumno.alumnos WHERE idAlumno=?', $this->datos['idAlumno']);
+                return $this->datos['idAlumno'];
             }
         } else{
             return $this->respuesta;

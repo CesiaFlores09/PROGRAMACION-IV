@@ -1,30 +1,38 @@
-Vue.component('alumno',{
+Vue.component('alumno', {
     data:()=>{
         return {
-            buscar:'',
-            alumnos:[],
-            alumno:{
-                accion : 'nuevo',
-                mostrar_msg : false,
+            alumnos: [],
+            buscar: '',
+            alumno: {
+                accion: 'nuevo',
                 msg : '',
-                idAlumno : '',
+                idAlumno: '',
                 codigo: '',
                 nombre: '',
                 direccion: '',
                 telefono: '',
-                fecha_nacimiento:'',
+                fecha_nacimiento: ''
             }
         }
     },
     methods:{
-        buscandoAlumno(){
-            this.obtenerAlumnos(this.buscar);
+        buscarAlumno(){
+        
+            this.obtenerDatos(this.buscar);
         },
         eliminarAlumno(alumno){
             if( confirm(`Esta seguro de eliminar el alumno ${alumno.nombre}?`) ){
-                this.alumno.accion = 'eliminar';
-                this.alumno.idAlumno = alumno.idAlumno;
-                this.guardarAlumno();
+               
+               let store = abrirStore('alumno', 'readwrite'),
+                   query = store.delete(alumno.idAlumno);
+                query.onsuccess = e=>{
+                    this.nuevoAlumno();
+                    this.obtenerDatos();
+                    this.alumno.msg = 'Alumno eliminado con exito';
+                };
+                query.onerror = e=>{
+                    this.alumno.msg = `Error al eliminar el alumno ${e.target.error}`;
+                };
             }
             this.nuevoAlumno();
         },
@@ -33,27 +41,33 @@ Vue.component('alumno',{
             this.alumno.accion = 'modificar';
         },
         guardarAlumno(){
-            this.obtenerAlumnos();
-            let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
+           
+            let store = abrirStore('alumno', 'readwrite');
             if(this.alumno.accion=="nuevo"){
                 this.alumno.idAlumno = generarIdUnicoFecha();
-                alumnos.push(this.alumno);
-            } else if(this.alumno.accion=="modificar"){
-                let index = alumnos.findIndex(alumno=>alumno.idAlumno==this.alumno.idAlumno);
-                alumnos[index] = this.alumno;
-            } else if( this.alumno.accion=="eliminar" ){
-                let index = alumnos.findIndex(alumno=>alumno.idAlumno==this.alumno.idAlumno);
-                alumnos.splice(index,1);
+                
             }
-            localStorage.setItem('alumnos', JSON.stringify(alumnos));
-            this.nuevoAlumno();
-            this.obtenerAlumnos();
-            this.alumno.msg = 'Alumno procesado con exito';
+            
+            let query = store.put(this.alumno);
+            query.onsuccess = e=>{
+                this.nuevoAlumno();
+                this.obtenerDatos();
+                this.alumno.msg = 'Alumno procesado con exito';
+            };
+            query.onerror = e=>{
+                this.alumno.msg = `Error al procesar el alumno ${e.target.error}`;
+            };
         },
-        obtenerAlumnos(valor=''){
-            this.alumnos = [];
-            let alumnos = JSON.parse(localStorage.getItem('alumnos')) || [];
-            this.alumnos = alumnos.filter(alumno=>alumno.nombre.toLowerCase().indexOf(valor.toLowerCase())>-1);
+        
+        obtenerDatos(valor=''){
+            let store = abrirStore('alumno', 'readonly'),
+                data = store.getAll();
+            data.onsuccess = e=>{
+                this.Alumnos = data.result.filter(alumno=>alumno.nombre.toLowerCase().indexOf(valor.toLowerCase())>-1);
+            };
+            data.onerror = e=>{
+                this.alumno.msg = `Error al obtener los Alumnos ${e.target.error}`;
+            };
         },
         nuevoAlumno(){
             this.alumno.accion = 'nuevo';
@@ -63,11 +77,12 @@ Vue.component('alumno',{
             this.alumno.nombre = '';
             this.alumno.direccion = '';
             this.alumno.telefono = '';
-            this.alumno.fecha_nacimiento = '';
+            this.alumno.fecha_nacimiento= '';
         }
     },
     created(){
-        this.obtenerAlumnos();
+        
+        this.obtenerDatos();
     },
     template:`
         <div id="appSistema">
@@ -144,8 +159,8 @@ Vue.component('alumno',{
                     <table class="table table-dark table-hover">
                         <thead>
                             <tr>
-                                <th colspan="6">
-                                    Buscar: <input @keyup="buscandoAlumno" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
+                                <th colspan="7">
+                                    Buscar: <input @keyup="buscarAlumno" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
                                 </th>
                             </tr>
                             <tr>
@@ -163,7 +178,7 @@ Vue.component('alumno',{
                                 <td>{{item.nombre}}</td>
                                 <td>{{item.direccion}}</td>
                                 <td>{{item.telefono}}</td>
-                                <td>{{item.fecha_nacimeinto}}</td>
+                                <td>{{item.fecha_nacimiento}}</td>
                                 <td>
                                     <button class="btn btn-danger" @click="eliminarAlumno(item)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
                                     <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
