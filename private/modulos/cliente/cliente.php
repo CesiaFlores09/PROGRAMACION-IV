@@ -38,21 +38,21 @@ class cliente{
     private function almacenar_datos(){
         if( $this->respuesta['msg']=='correcto' ){
             if( $this->datos['accion']=='nuevo' ){
-                $this->db->consultas('INSERT INTO db_sistema.clientes(idCliente, codigo, nombre, direccion, telefono, dui) 
+                $this->db->consultas('INSERT INTO db_siste.clientes(idCliente, codigo, nombre, direccion, telefono, dui) 
                     VALUES(?,?,?,?,?,?)',
                     $this->datos['idCliente'], $this->datos['codigo'],$this->datos['nombre'],$this->datos['direccion'],
                     $this->datos['telefono'], $this->datos['dui']
                 );
                 return $this->db->obtenerUltimoId();
             }else if( $this->datos['accion']=='modificar' ){
-                $this->db->consultas('UPDATE db_sistema.clientes SET codigo=?, nombre=?, direccion=?, telefono=?, dui=? 
+                $this->db->consultas('UPDATE db_siste.clientes SET codigo=?, nombre=?, direccion=?, telefono=?, dui=? 
                     WHERE idCliente=?',
                     $this->datos['codigo'],$this->datos['nombre'],$this->datos['direccion'],
                     $this->datos['telefono'], $this->datos['dui'], $this->datos['idCliente']
                 );
                 return $this->datos['idCliente'];
             }else if( $this->datos['accion']=='eliminar' ){
-                $this->db->consultas('DELETE FROM db_sistema.clientes WHERE idCliente=?', $this->datos['idCliente']);
+                $this->db->consultas('DELETE FROM db_siste.clientes WHERE idCliente=?', $this->datos['idCliente']);
                 return $this->datos['idCliente'];
             }
         } else{
@@ -60,7 +60,7 @@ class cliente{
         }
     }
     public function obtener_datos(){
-        $this->db->consultas('SELECT * FROM db_sistema.clientes');
+        $this->db->consultas('SELECT * FROM db_siste.clientes');
         return $this->db->obtener_datos();
     }
 }
