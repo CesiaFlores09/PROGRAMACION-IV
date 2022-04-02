@@ -1,12 +1,13 @@
-Vue.component('alumno', {
+Vue.component('alumno',{
     data:()=>{
         return {
-            alumnos: [],
-            buscar: '',
-            alumno: {
-                accion: 'nuevo',
+            buscar:'',
+            alumnos:[],
+            alumno:{
+                accion : 'nuevo',
+                mostrar_msg : false,
                 msg : '',
-                idAlumno: '',
+                idAlumno : '',
                 codigo: '',
                 nombre: '',
                 direccion: '',
@@ -16,16 +17,27 @@ Vue.component('alumno', {
         }
     },
     methods:{
-        buscarAlumno(){
-        
+        sincronizarDatosServidor(alumno){
+            fetch(`private/modulos/alumno/alumno.php?datos=${JSON.stringify(alumno)}&accion=recibir_datos`, 
+                {credentials: 'same-origin'})
+                .then(res=>res.json())
+                .then(data=>{
+                    this.alumno.msg = `Alumno procesado ${data.msg}`;
+                })
+                .catch(err=>{
+                    this.alumno.msg = `Error al guardar el alumno ${err}`;
+                });
+        },
+        buscandoAlumno(){
             this.obtenerDatos(this.buscar);
         },
         eliminarAlumno(alumno){
             if( confirm(`Esta seguro de eliminar el alumno ${alumno.nombre}?`) ){
-               
-               let store = abrirStore('alumno', 'readwrite'),
+                alumno.accion = 'eliminar';
+                let store = abrirStore('alumno', 'readwrite'),
                    query = store.delete(alumno.idAlumno);
                 query.onsuccess = e=>{
+                    this.sincronizarDatosServidor(alumno);
                     this.nuevoAlumno();
                     this.obtenerDatos();
                     this.alumno.msg = 'Alumno eliminado con exito';
@@ -41,15 +53,13 @@ Vue.component('alumno', {
             this.alumno.accion = 'modificar';
         },
         guardarAlumno(){
-           
             let store = abrirStore('alumno', 'readwrite');
             if(this.alumno.accion=="nuevo"){
                 this.alumno.idAlumno = generarIdUnicoFecha();
-                
             }
-            
             let query = store.put(this.alumno);
             query.onsuccess = e=>{
+                this.sincronizarDatosServidor(this.alumno);
                 this.nuevoAlumno();
                 this.obtenerDatos();
                 this.alumno.msg = 'Alumno procesado con exito';
@@ -58,15 +68,35 @@ Vue.component('alumno', {
                 this.alumno.msg = `Error al procesar el alumno ${e.target.error}`;
             };
         },
-        
         obtenerDatos(valor=''){
             let store = abrirStore('alumno', 'readonly'),
                 data = store.getAll();
             data.onsuccess = e=>{
-                this.Alumnos = data.result.filter(alumno=>alumno.nombre.toLowerCase().indexOf(valor.toLowerCase())>-1);
+                if( data.result.length<=0 ){
+                    fetch(`private/modulos/alumno/alumno.php?accion=obtener_datos`, 
+                        {credentials: 'same-origin'})
+                        .then(res=>res.json())
+                        .then(data=>{
+                            this.alumnos = data;
+                            data.map(alumno=>{
+                                let store = abrirStore('alumno', 'readwrite'),
+                                    query = store.put(alumno);
+                                query.onsuccess = e=>{
+                                    console.log(`Alumno ${alumno.nombre} guardado`);
+                                };
+                                query.onerror = e=>{
+                                    console.log(`Error al guardar el alumno ${e.target.error}`);
+                                };
+                            });
+                        })
+                        .catch(err=>{
+                            this.alumno.msg = `Error al guardar el alumno ${err}`;
+                        });
+                }
+                this.alumnos = data.result.filter(alumno=>alumno.nombre.toLowerCase().indexOf(valor.toLowerCase())>-1);
             };
             data.onerror = e=>{
-                this.alumno.msg = `Error al obtener los Alumnos ${e.target.error}`;
+                this.alumno.msg = `Error al obtener los alumnos ${e.target.error}`;
             };
         },
         nuevoAlumno(){
@@ -77,12 +107,11 @@ Vue.component('alumno', {
             this.alumno.nombre = '';
             this.alumno.direccion = '';
             this.alumno.telefono = '';
-            this.alumno.fecha_nacimiento= '';
+            this.alumno.fecha_nacimiento = '';
         }
     },
     created(){
-        
-        this.obtenerDatos();
+        //this.obtenerDatos();
     },
     template:`
         <div id="appSistema">
@@ -160,7 +189,7 @@ Vue.component('alumno', {
                         <thead>
                             <tr>
                                 <th colspan="7">
-                                    Buscar: <input @keyup="buscarAlumno" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
+                                    Buscar: <input @keyup="buscandoAlumno" v-model="buscar" placeholder="Buscar" class="form-control" type="text" >
                                 </th>
                             </tr>
                             <tr>

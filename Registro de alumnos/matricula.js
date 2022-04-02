@@ -17,27 +17,38 @@ Vue.component('matricula',{
                 alumn: '',
                 ciclo: '',
                 fecha_m : '',
-               
+              
             }
         }
     },
     methods:{
+        sincronizarDatosServidor(matricula){
+            fetch(`private/modulos/alumno/matricula.php?datos=${JSON.stringify(matricula)}&accion=recibir_datos`, 
+                {credentials: 'same-origin'})
+                .then(res=>res.json())
+                .then(data=>{
+                    this.matricula.msg = `Matricula procesado ${data.msg}`;
+                })
+                .catch(err=>{
+                    this.matricula.msg = `Error al guardar el matricula ${err}`;
+                });
+        },
         buscandoMatricula(){
-          
             this.obtenerDatos(this.buscar);
         },
         eliminarMatricula(matricula){
-            if( confirm(`Esta seguro de eliminar la matricula de ${matricula.alumno}?`) ){
-               
+            if( confirm(`Esta seguro de eliminar la matricula ${matricula.alumno}?`) ){
+                matricula.accion = 'eliminar';
                 let store = abrirStore('matricula', 'readwrite'),
-                query = store.delete(matricula.idMatricula);
+                   query = store.delete(matricula.idMatricula);
                 query.onsuccess = e=>{
+                    this.sincronizarDatosServidor(matricula);
                     this.nuevoMatricula();
                     this.obtenerDatos();
-                    this.matricula.msg = 'Matricula eliminada con exito';
+                    this.matricula.msg = 'Matricula eliminado con exito';
                 };
                 query.onerror = e=>{
-                    this.matricula.msg = `Error al eliminar la matricula ${e.target.error}`;
+                    this.matricula.msg = `Error al eliminar el matricula ${e.target.error}`;
                 };
             }
             this.nuevoMatricula();
@@ -47,43 +58,57 @@ Vue.component('matricula',{
             this.matricula.accion = 'modificar';
         },
         guardarMatricula(){
-            let store = abrirStore('matricula','readwrite');
-        
+            let store = abrirStore('matricula', 'readwrite');
             if(this.matricula.accion=="nuevo"){
                 this.matricula.idMatricula = generarIdUnicoFecha();
-               
+
             }
-            
             let query = store.put(this.matricula);
             query.onsuccess = e=>{
+                this.sincronizarDatosServidor(this.matricula);
                 this.nuevoMatricula();
                 this.obtenerDatos();
-                this.matricula.msg = 'Error al procesar la matricula';
-                
+                this.matricula.msg = 'Matricula procesada con exito';
             };
             query.onerror = e=>{
                 this.matricula.msg = `Error al procesar la matricula ${e.target.error}`;
             };
         },
-     
         obtenerDatos(valor=''){
             let store = abrirStore('matricula', 'readonly'),
                 data = store.getAll();
             data.onsuccess = e=>{
-                this.matriculas = data.result.filter(matricula=>matricula.alumn.toLowerCase().indexOf(valor.toLowerCase())>-1);
+                if( data.result.length<=0 ){
+                    fetch(`private/modulos/alumno/matricula.php?accion=obtener_datos`, 
+                        {credentials: 'same-origin'})
+                        .then(res=>res.json())
+                        .then(data=>{
+                            this.matriculas = data;
+                            data.map(matricula=>{
+                                let store = abrirStore('matricula', 'readwrite'),
+                                    query = store.put(matricula);
+                                query.onsuccess = e=>{
+                                    console.log(`Matricula ${matricula.alumn} guardado`);
+                                };
+                                let store_alum = abrirStore('alumno', 'readwrite'),
+                                query_ALUM = store_alum.put(alumno);
+                             query_ALUM.onsuccess = e=>{
+                                console.log(`Matricula ${label.alumno.nombre} guardado`);
+                            };
+                                query.onerror = e=>{
+                                    console.log(`Error al guardar el matricula ${e.target.error}`);
+                                };
+                                
+                            });
+                        })
+                        .catch(err=>{
+                            this.matricula.msg = `Error al guardar el matricula ${err}`;
+                        });
+                }
+                this.matriculas = data.result.filter(matricula=>matricula.alumno.toLowerCase().indexOf(valor.toLowerCase())>-1);
             };
             data.onerror = e=>{
-                console.log(e.target.error);
-            };
-            let store_cat = abrirStore('alumno', 'readonly'),
-                data_cat = store_cat.getAll();
-            data_cat.onsuccess = e=>{
-                this.alumnos = data_cat.result.map(alumno=>{
-                    return {
-                        id: alumno.idAlumno,
-                        label: alumno.nombre,
-                    }
-                });
+                this.matricula.msg = `Error al obtener los matriculas ${e.target.error}`;
             };
         },
         nuevoMatricula(){
@@ -97,9 +122,9 @@ Vue.component('matricula',{
         }
     },
     created(){
-        this.obtenerDatos();
-       
+        //this.obtenerDatos();
     },
+
     template:`
         <div id="appSistema">
             <div class="card text-white" id="carmatricula">
