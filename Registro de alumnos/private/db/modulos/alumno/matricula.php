@@ -4,7 +4,7 @@ EXTRACT($_REQUEST);
 
 $class_matricula =  new matricula($conexion);
 $datos = isset($datos) ? $datos : '[]';
-print_r(json_encode($class_matricula->$accion($datos)));
+print_r(json_encode($class_matricula>$accion($datos)));
 
 class matricula{
     private $datos=[], $db;
@@ -27,14 +27,14 @@ class matricula{
         if( empty(trim($this->datos['fecha_m'])) ){
             $this->respuesta['msg'] = 'Por favor ingrese la fecha de matricula';
         }
-        
+       
         return $this->almacenar_datos();
     }
     private function almacenar_datos(){
         if( $this->respuesta['msg']=='correcto' ){
             if( $this->datos['accion']=='nuevo' ){
                 $this->db->consultas('INSERT INTO db_sistema_alumno.matriculas(idMatricula, alumno, ciclo, fecha_m) 
-                    VALUES(?,?,?,?)',
+                    VALUES(?,?,?,?,?,?,)',
                     $this->datos['idMatricula'], $this->datos['alumno'],$this->datos['ciclo'],
                     $this->datos['fecha_m']
                 );
@@ -43,11 +43,11 @@ class matricula{
                 $this->db->consultas('UPDATE db_sistema_alumno.matriculas SET alumno=?, ciclo=?, fecha_m=?
                     WHERE idMatricula=?',
                     $this->datos['alumno'],$this->datos['ciclo'],
-                    $this->datos['fecha_m'], $this->datos['idMatricula']
+                    $this->datos['fecha_m'], $this->datos['telefono'], $this->datos['fecha_nacimiento'], $this->datos['idMatricula']
                 );
                 return $this->datos['idMatricula'];
             }else if( $this->datos['accion']=='eliminar' ){
-                $this->db->consultas('DELETE FROM db_sistemaalumno.matriculas WHERE idMatricula=?', $this->datos['idMatricula']);
+                $this->db->consultas('DELETE FROM db_sistema_alumno.matriculas WHERE idMatricula=?', $this->datos['idMatricula']);
                 return $this->datos['idMatricula'];
             }
         } else{

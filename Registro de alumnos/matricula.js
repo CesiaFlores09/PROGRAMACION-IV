@@ -17,7 +17,7 @@ Vue.component('matricula',{
                 alumn: '',
                 ciclo: '',
                 fecha_m : '',
-              
+               
             }
         }
     },
@@ -37,7 +37,7 @@ Vue.component('matricula',{
             this.obtenerDatos(this.buscar);
         },
         eliminarMatricula(matricula){
-            if( confirm(`Esta seguro de eliminar la matricula ${matricula.alumno}?`) ){
+            if( confirm(`Esta seguro de eliminar el matricula ${matricula.nombre}?`) ){
                 matricula.accion = 'eliminar';
                 let store = abrirStore('matricula', 'readwrite'),
                    query = store.delete(matricula.idMatricula);
@@ -61,14 +61,13 @@ Vue.component('matricula',{
             let store = abrirStore('matricula', 'readwrite');
             if(this.matricula.accion=="nuevo"){
                 this.matricula.idMatricula = generarIdUnicoFecha();
-
             }
             let query = store.put(this.matricula);
             query.onsuccess = e=>{
                 this.sincronizarDatosServidor(this.matricula);
                 this.nuevoMatricula();
                 this.obtenerDatos();
-                this.matricula.msg = 'Matricula procesada con exito';
+                this.matricula.msg = 'Matricula procesado con exito';
             };
             query.onerror = e=>{
                 this.matricula.msg = `Error al procesar la matricula ${e.target.error}`;
@@ -76,55 +75,74 @@ Vue.component('matricula',{
         },
         obtenerDatos(valor=''){
             let store = abrirStore('matricula', 'readonly'),
-                data = store.getAll();
-            data.onsuccess = e=>{
-                if( data.result.length<=0 ){
-                    fetch(`private/modulos/alumno/matricula.php?accion=obtener_datos`, 
-                        {credentials: 'same-origin'})
-                        .then(res=>res.json())
-                        .then(data=>{
-                            this.matriculas = data;
-                            data.map(matricula=>{
-                                let store = abrirStore('matricula', 'readwrite'),
-                                    query = store.put(matricula);
-                                query.onsuccess = e=>{
-                                    console.log(`Matricula ${matricula.alumn} guardado`);
-                                };
-                                let store_alum = abrirStore('alumno', 'readwrite'),
-                                query_ALUM = store_alum.put(alumno);
-                             query_ALUM.onsuccess = e=>{
-                                console.log(`Matricula ${label.alumno.nombre} guardado`);
+            data = store.getAll();
+        
+        data.onsuccess = e=>{
+            if( data.result.length<=0 ){
+                fetch(`private/modulos/alumno/matricula.php?accion=obtener_datos`, 
+                    {credentials: 'same-origin'})
+                    .then(res=>res.json())
+                    .then(data=>{
+                        this.matriculas = data;
+                        data.map(matricula=>{
+                            let store = abrirStore('matricula', 'readwrite'),
+                                query = store.put(matricula);
+                            query.onsuccess = e=>{
+                                console.log(`Matricula ${matricula} guardado`);
                             };
-                                query.onerror = e=>{
-                                    console.log(`Error al guardar el matricula ${e.target.error}`);
-                                };
-                                
-                            });
-                        })
-                        .catch(err=>{
-                            this.matricula.msg = `Error al guardar el matricula ${err}`;
+                            
+                            query.onerror = e=>{
+                                console.log(`Error al guardar el matricula ${e.target.error}`);
+                            };
                         });
+
+                
+                    })
+                    .catch(err=>{
+                        this.matricula.msg = `Error al guardar el matricula ${err}`;
+                    });
+                    
+            }
+            this.matriculas = data.result.filter(matricula=>matricula.alumn.toLowerCase().indexOf(valor.toLowerCase())>-1);
+        };
+       
+        data.onerror = e=>{
+            this.matricula.msg = `Error al obtener los matriculas ${e.target.error}`;
+        };
+        let store_alum = abrirStore('alumno', 'readonly'),
+            data_alum = store_alum.getAll();
+        data_alum.onsuccess = e=>{
+            this.alumnos = data_alum.result.map(alumno=>{
+                return {
+                    id: alumno.idAlumno,
+                    label: alumno.nombre
                 }
-                this.matriculas = data.result.filter(matricula=>matricula.alumno.toLowerCase().indexOf(valor.toLowerCase())>-1);
-            };
-            data.onerror = e=>{
-                this.matricula.msg = `Error al obtener los matriculas ${e.target.error}`;
-            };
+            });
+        };
+        
+
+    
         },
+        
+           
         nuevoMatricula(){
-            this.matricula.accion = 'nuevo';
-            this.matricula.msg = '';
-            this.matricula.idMatricula = '';
-            this.matricula.alumno = '';
-            this.matricula.ciclo = '';
-            this.matricula.fecha_m = '';
-          
-        }
+        
+                this.matricula.accion = 'nuevo';
+                this.matricula.msg = '';
+                this.matricula.idMatricula = '';
+                this.matricula.alumno = '';
+                this.matricula.ciclo = '';
+                this.matricula.fecha_m = '';
+        
+           
+        },
+        
     },
+        
+    
     created(){
         //this.obtenerDatos();
     },
-
     template:`
         <div id="appSistema">
             <div class="card text-white" id="carmatricula">

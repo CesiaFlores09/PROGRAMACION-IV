@@ -25,16 +25,27 @@ Vue.component('materia',{
         }
     },
     methods:{
+        sincronizarDatosServidor(materia){
+            fetch(`private/modulos/alumno/materia.php?datos=${JSON.stringify(materia)}&accion=recibir_datos`, 
+                {credentials: 'same-origin'})
+                .then(res=>res.json())
+                .then(data=>{
+                    this.materia.msg = `Materia procesado ${data.msg}`;
+                })
+                .catch(err=>{
+                    this.materia.msg = `Error al guardar el materia ${err}`;
+                });
+        },
         buscandoMateria(){
-          
             this.obtenerDatos(this.buscar);
         },
         eliminarMateria(materia){
-            if( confirm(`Esta seguro de eliminar la materia de ${materia.alumno}?`) ){
-               
+            if( confirm(`Esta seguro de eliminar el materia ${materia.nombre}?`) ){
+                materia.accion = 'eliminar';
                 let store = abrirStore('materia', 'readwrite'),
-                query = store.delete(materia.idMateria);
+                   query = store.delete(materia.idMateria);
                 query.onsuccess = e=>{
+                    this.sincronizarDatosServidor(materia);
                     this.nuevoMateria();
                     this.obtenerDatos();
                     this.materia.msg = 'Materia eliminada con exito';
@@ -50,44 +61,70 @@ Vue.component('materia',{
             this.materia.accion = 'modificar';
         },
         guardarMateria(){
-            let store = abrirStore('materia','readwrite');
-        
+            let store = abrirStore('materia', 'readwrite');
             if(this.materia.accion=="nuevo"){
                 this.materia.idMateria = generarIdUnicoFecha();
-               
             }
-            
             let query = store.put(this.materia);
             query.onsuccess = e=>{
+                this.sincronizarDatosServidor(this.materia);
                 this.nuevoMateria();
                 this.obtenerDatos();
-                this.materia.msg = 'Error al procesar la materia';
-                
+                this.materia.msg = 'Materia procesado con exito';
             };
             query.onerror = e=>{
                 this.materia.msg = `Error al procesar la materia ${e.target.error}`;
             };
         },
-     
         obtenerDatos(valor=''){
             let store = abrirStore('materia', 'readonly'),
-                data = store.getAll();
-            data.onsuccess = e=>{
-                this.materias = data.result.filter(materia=>materia.alumn.toLowerCase().indexOf(valor.toLowerCase())>-1);
-            };
-            data.onerror = e=>{
-                console.log(e.target.error);
-            };
-            let store_cat = abrirStore('alumno', 'readonly'),
-                data_cat = store_cat.getAll();
-            data_cat.onsuccess = e=>{
-                this.alumnos = data_cat.result.map(alumno=>{
-                    return {
-                        id: alumno.idAlumno,
-                        label: alumno.nombre,
-                    }
-                });
-            };
+            data = store.getAll();
+        
+        data.onsuccess = e=>{
+            if( data.result.length<=0 ){
+                fetch(`private/modulos/alumno/materia.php?accion=obtener_datos`, 
+                    {credentials: 'same-origin'})
+                    .then(res=>res.json())
+                    .then(data=>{
+                        this.Materias = data;
+                        data.map(materia=>{
+                            let store = abrirStore('materia', 'readwrite'),
+                                query = store.put(materia);
+                            query.onsuccess = e=>{
+                                console.log(`Materia ${materia} guardado`);
+                            };
+                            
+                            query.onerror = e=>{
+                                console.log(`Error al guardar el materia ${e.target.error}`);
+                            };
+                        });
+
+                
+                    })
+                    .catch(err=>{
+                        this.materia.msg = `Error al guardar el materia ${err}`;
+                    });
+                    
+            }
+            this.materias = data.result.filter(materia=>materia.alumn.toLowerCase().indexOf(valor.toLowerCase())>-1);
+        };
+       
+        data.onerror = e=>{
+            this.materia.msg = `Error al obtener los Materias ${e.target.error}`;
+        };
+        let store_alum = abrirStore('alumno', 'readonly'),
+            data_alum = store_alum.getAll();
+        data_alum.onsuccess = e=>{
+            this.alumnos = data_alum.result.map(alumno=>{
+                return {
+                    id: alumno.idAlumno,
+                    label: alumno.nombre
+                }
+            });
+        };
+        
+
+    
         },
         nuevoMateria(){
             this.materia.accion = 'nuevo';
@@ -103,7 +140,7 @@ Vue.component('materia',{
         }
     },
     created(){
-        this.obtenerDatos();
+        //this.obtenerDatos();
        
     },
     template:`
