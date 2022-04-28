@@ -57,7 +57,7 @@
                             <label for="password" class="col-md-4 col-form-label text-md-end">Contraseña</label>
 
                             <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password" pattern="^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$" title="La contraseña debe tener 8 caracteres, un simbolo, almenos un digito, almenos una letra mayúscula, almenos una letra minúscula">
 
                                 @error('password')
                                     <span class="invalid-feedback" role="alert">
@@ -71,7 +71,7 @@
                             <label for="password-confirm" class="col-md-4 col-form-label text-md-end">Confirmar contraseña</label>
 
                             <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password" pattern="^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$" title="La contraseña debe tener 8 caracteres, un simbolo, almenos un digito, almenos una letra mayúscula, almenos una letra minúscula">
                             </div>
                         </div>
 

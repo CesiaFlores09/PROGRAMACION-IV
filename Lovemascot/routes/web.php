@@ -28,3 +28,4 @@ Route::get('/facebook/auth/callback', [App\Http\Controllers\Auth\FacebookControl
 Route::post('/mascotas/continuar', [App\Http\Controllers\MascotasController::class, 'store'])->name('mascotas.store');
 Route::get('/mascotas/actualizar', [App\Http\Controllers\MascotasController::class, 'update'])->name('mascotas.update');
 Route::post('/mascotas/terminar', [App\Http\Controllers\MascotasController::class, 'cartilla'])->name('mascotas.cartilla');
+Route::get('/mascotas/mostrar', [App\Http\Controllers\MascotasController::class, 'index'])->name('mascotas.mostrar');

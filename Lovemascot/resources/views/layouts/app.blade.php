@@ -55,6 +55,9 @@
                             <li class="nav-item">
                                 <a href="#" class="nav-link link" style="background-color: #fafafa; margin: 0 2px; border-radius: 10px;" @click="mostrarFormulario('registroMascota')">Registrar mascota</a>
                             </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link link" style="background-color: #fafafa; margin: 0 2px; border-radius: 10px;" @click="mostrarFormulario('mostrarMascota')">Mostrar mascota</a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="background-color: #fafafa; margin: 0 2px; border-radius: 10px;">
                                     {{ Auth::user()->name }}

@@ -21,6 +21,7 @@ window.Vue = require('vue').default;
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('registro-mascota', require('./components/RegistrarMascota.vue').default);
+Vue.component('mostrar-mascota', require('./components/MostrarMascota.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,12 +33,27 @@ const app = new Vue({
     el: '#app',
     data: {
         formularios: {
-            registroMascota: {mostrar: false}
+            registroMascota: {mostrar: false},
+            mostrarMascota: {mostrar: false},
         }
     },
     methods: {
         mostrarFormulario(formulario) {
-            this.formularios[formulario].mostrar = true;
+            for (let key in this.formularios) {
+                if (key === formulario) {
+                    this.formularios[key].mostrar = true;
+                } else {
+                    this.formularios[key].mostrar = false;
+                }
+            }
         }
+    },
+    afterMount() {
+        this.$root.$on('close', (value) => {
+            this.formularios[value].mostrar = false;
+            if (value === 'registroMascota') {
+                this.formularios.mostrarMascota.mostrar = true;
+            }
+        });
     }
 });

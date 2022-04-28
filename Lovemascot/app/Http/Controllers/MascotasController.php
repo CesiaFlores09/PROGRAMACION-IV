@@ -14,7 +14,7 @@ class MascotasController extends Controller
      */
     public function index()
     {
-        // return view('mascotas');
+        return Mascotas::all();
     }
 
     /**
@@ -37,6 +37,13 @@ class MascotasController extends Controller
     {
         $parametros = $this->validar($request)->only(['nombre', 'raza', 'color', 'edad', 'sexo',]);
         $mascota = Mascotas::create($parametros);
+        $imagen = $request->imagen;
+        $imagen = explode(',', $imagen);
+        $imagenNombre = $mascota->id . '.png';
+        $path = 'storage/imagenes/mascotas/fotos/' . $imagenNombre;
+        file_put_contents($path, base64_decode($imagen[1]));
+        $mascota->imagen = $imagenNombre;
+        $mascota->save();
         return response()->json(['id' => $mascota->id]);
     }
 
@@ -118,6 +125,7 @@ class MascotasController extends Controller
     public function validar($parameters)
     {
         $this->validate($parameters, [
+            'imagen' => 'required|string|',
             'nombre' => 'required|string|max:255',
             'raza' => 'required|string|max:255',
             'color' => 'required|string|max:255',

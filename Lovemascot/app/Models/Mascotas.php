@@ -9,5 +9,5 @@ class Mascotas extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['cartilla', 'nombre', 'raza', 'color', 'edad', 'sexo',];
+    protected $fillable = ['cartilla', 'imagen', 'nombre', 'raza', 'color', 'edad', 'sexo',];
 }

@@ -23,6 +23,23 @@
         <div class="card-body">
             <form v-if="step == '1'" @submit.prevent="siguiente">
                 <div class="row mb-3">
+                    <label for="imagen" class="col-md-4 col-form-label text-md-end">Imagen</label>
+
+                    <div class="col-md-6">
+                        <input id="imagen" type="file" class="form-control" name="imagen" value="" required autocomplete="imagen" autofocus @change="mostrarImagen">
+                    </div>
+                    <div v-if="errors.imagen" class="alert alert-danger col-md-8 fs-6 mx-auto">  
+                        <span v-for="error in errors.imagen" :key="error" class="font-weight-bold">{{ error }}</span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6 offset-md-4">
+                        <img :src="registro.imagen" class="img-fluid" alt="">
+                    </div>
+                </div>
+
+                <div class="row mb-3">
                     <label for="name" class="col-md-4 col-form-label text-md-end">Nombre</label>
 
                     <div class="col-md-6">
@@ -131,6 +148,7 @@
                 razas: ['Labrador', 'Poodle', 'Pug', 'Bulldog', 'Pitbull', 'Chihuahua', 'Otro'],
                 errors: {},
                 registro: {
+                    imagen: '',
                     nombre: '',
                     raza: '',
                     color: '',
@@ -151,11 +169,13 @@
             sincronizar(datos, metodo, url) {
                 axios[metodo](url, datos)
                     .then(response => {
-                        console.log(response.data);
+                        console.log(response.data, this.step);
                         if (this.step == '1') {
                             this.cartilla.id_mascota = response.data.id;
                             this.registro.id = response.data.id;
                             this.step = '2';
+                        } else if (this.step === '2') {
+                            this.$root.$emit('close', 'registroMascota');
                         }
                     })
                     .catch(error => {
@@ -169,6 +189,13 @@
                 reader.readAsDataURL(e.target.files[0]);
                 reader.onload = (e) => {
                     this.cartilla.imagen = e.target.result;
+                }
+            },
+            mostrarImagen(e) {
+                var reader = new FileReader();
+                reader.readAsDataURL(e.target.files[0]);
+                reader.onload = (e) => {
+                    this.registro.imagen = e.target.result;
                 }
             },
             siguiente() {
