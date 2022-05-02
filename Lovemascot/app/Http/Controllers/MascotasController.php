@@ -17,6 +17,11 @@ class MascotasController extends Controller
         return Mascotas::all();
     }
 
+    public function razas()
+    {
+        return Mascotas::select('raza')->groupBy('raza')->get();
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -35,7 +40,7 @@ class MascotasController extends Controller
      */
     public function store(Request $request)
     {
-        $parametros = $this->validar($request)->only(['nombre', 'raza', 'color', 'edad', 'sexo',]);
+        $parametros = $this->validar($request)->only(['duenio', 'nombre', 'raza', 'color', 'edad', 'sexo',]);
         $mascota = Mascotas::create($parametros);
         $imagen = $request->imagen;
         $imagen = explode(',', $imagen);
@@ -95,15 +100,38 @@ class MascotasController extends Controller
         }
     }
 
+    public function actualizar(Request $request)
+    {
+        $mascota = Mascotas::find($request->id);
+        $mascota->nombre = $request->nombre;
+        $mascota->raza = $request->raza;
+        $mascota->color = $request->color;
+        $mascota->edad = $request->edad;
+        $mascota->sexo = $request->sexo;
+        $imagen = $request->imagen;
+        $imagen = explode(',', $imagen);
+        $imagenNombre = $request->id.'.png';
+        $path = 'storage/imagenes/mascotas/fotos/'.$imagenNombre;
+        file_put_contents($path, base64_decode($imagen[1]));
+        $mascota->save();
+        return response()->json(['status' => 'success']);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Mascotas  $mascotas
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Mascotas $mascotas)
+    public function destroy(Mascotas $mascotas, $id)
     {
-        //
+        $mascota = Mascotas::find($id);
+        $path = 'storage/imagenes/mascotas/fotos/' . $mascota->imagen;
+        unlink($path);
+        $path = 'storage/imagenes/mascotas/cartillas/' . $mascota->cartilla;
+        unlink($path);
+        $mascota->delete();
+        return response()->json(['status' => 'success']);
     }
 
     public function cartilla(Request $request)
@@ -125,6 +153,7 @@ class MascotasController extends Controller
     public function validar($parameters)
     {
         $this->validate($parameters, [
+            'duenio' => 'integer|required',
             'imagen' => 'required|string|',
             'nombre' => 'required|string|max:255',
             'raza' => 'required|string|max:255',

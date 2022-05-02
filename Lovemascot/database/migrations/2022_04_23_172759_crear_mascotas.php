@@ -15,6 +15,7 @@ class CrearMascotas extends Migration
     {
         Schema::create('mascotas', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('duenio');
             $table->string('cartilla')->nullable();
             $table->string('imagen')->nullable();
             $table->string('nombre');
@@ -23,6 +24,7 @@ class CrearMascotas extends Migration
             $table->string('edad');
             $table->string('sexo');
             $table->timestamps();
+            $table->foreign('duenio')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

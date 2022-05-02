@@ -5255,6 +5255,282 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-select */ "./node_modules/vue-select/dist/vue-select.js");
+/* harmony import */ var vue_select__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue_select__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vue_select_dist_vue_select_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-select/dist/vue-select.css */ "./node_modules/vue-select/dist/vue-select.css");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    mascota: {
+      type: Object,
+      required: true
+    }
+  },
+  data: function data() {
+    return {
+      sexos: [{
+        nombre: 'Macho'
+      }, {
+        nombre: 'Hembra'
+      }],
+      razas: [],
+      errors: {},
+      registro: {
+        id: this.mascota.id,
+        duenio: this.mascota.duenio,
+        imagen: 'storage/imagenes/mascotas/fotos/' + this.mascota.imagen,
+        nombre: this.mascota.nombre,
+        raza: this.mascota.raza,
+        color: this.mascota.color,
+        edad: this.mascota.edad,
+        sexo: this.mascota.sexo
+      },
+      cartilla: {
+        id_mascota: this.mascota.id,
+        imagen: this.mascota.imagen
+      },
+      step: '1'
+    };
+  },
+  components: {
+    'v-select': (vue_select__WEBPACK_IMPORTED_MODULE_0___default())
+  },
+  methods: {
+    sincronizar: function sincronizar(datos, metodo, url) {
+      var _this = this;
+
+      axios[metodo](url, datos).then(function (response) {
+        console.log(response.data, _this.step, _this.step == '1', _this.step == '2');
+
+        if (_this.step == '1') {
+          _this.step = '2';
+        } else if (_this.step == '2') {
+          _this.$root.$emit('close', 'actualizarMascota');
+        }
+      })["catch"](function (error) {
+        console.log(error);
+        _this.errors = error.response.data.errors;
+        console.log(_this.errors);
+      });
+    },
+    conseguirRazas: function conseguirRazas() {
+      var _this2 = this;
+
+      axios.get('/mascotas/razas').then(function (response) {
+        _this2.razas = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    mostrarCartilla: function mostrarCartilla(e) {
+      var _this3 = this;
+
+      var reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+
+      reader.onload = function (e) {
+        _this3.cartilla.imagen = e.target.result;
+      };
+    },
+    mostrarImagen: function mostrarImagen(e) {
+      var _this4 = this;
+
+      var reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+
+      reader.onload = function (e) {
+        _this4.registro.imagen = e.target.result;
+      };
+    },
+    siguiente: function siguiente() {
+      this.registro.sexo = this.registro.sexo.nombre ? this.registro.sexo.nombre : this.registro.sexo;
+      this.registro.raza = this.registro.raza.raza ? this.registro.raza.raza : this.registro.raza;
+      this.sincronizar(this.registro, 'post', 'mascotas/actualizacion');
+    },
+    terminar: function terminar() {
+      this.sincronizar(this.cartilla, 'post', 'mascotas/terminar');
+    }
+  },
+  mounted: function mounted() {
+    console.log('Component mounted.');
+    this.conseguirRazas();
+  } // watch: {
+  //     registro: {
+  //         handler() {
+  //             console.log(this.registro);
+  //             this.update = {
+  //                 id: false,
+  //                 duenio: false,
+  //                 nombre: false,
+  //                 imagen: false,
+  //                 raza: false,
+  //                 color: false,
+  //                 edad: false,
+  //                 sexo: false
+  //             };
+  //             for (let key in this.registro) {
+  //                 if (this.registro[key] != this.mascota[key]) {
+  //                     this.update[key] = true;
+  //                 }
+  //             }
+  //         },
+  //         deep: true
+  //     }
+  // }
+
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
@@ -5328,12 +5604,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    usuario: {
+      type: Object,
+      required: true
+    }
+  },
   data: function data() {
     return {
-      mascotas: []
+      mascotas: [],
+      buscar: ''
     };
   },
   components: {
@@ -5345,10 +5635,44 @@ __webpack_require__.r(__webpack_exports__);
 
       axios[metodo](url, datos).then(function (response) {
         console.log(response.data);
-        _this.mascotas = response.data;
+
+        if (metodo != 'delete') {
+          _this.mascotas = response.data;
+
+          _this.mascotas.forEach(function (mascota) {
+            mascota.mostrar = true;
+          });
+        }
       })["catch"](function (error) {
         console.log(error);
       });
+    },
+    eliminarMascota: function eliminarMascota(id) {
+      if (confirm('¿Estas seguro de eliminar esta mascota?')) {
+        this.sincronizar({}, 'delete', '/mascotas/eliminar/' + id);
+        this.mascotas = this.mascotas.filter(function (mascota) {
+          return mascota.id != id;
+        });
+        this.$;
+      }
+    },
+    editarMascota: function editarMascota(id) {
+      this.$root.$emit('editar-mascota', id);
+    },
+    buscarMascota: function buscarMascota() {
+      var _this2 = this;
+
+      this.mascotas.forEach(function (mascota) {
+        mascota.mostrar = false;
+      });
+      this.mascotas.map(function (mascota) {
+        if (mascota.nombre.toLowerCase().includes(_this2.buscar.toLowerCase()) || mascota.color.toLowerCase().includes(_this2.buscar.toLowerCase()) || mascota.raza.toLowerCase().includes(_this2.buscar.toLowerCase()) || mascota.edad.toLowerCase().includes(_this2.buscar.toLowerCase()) || mascota.sexo.toLowerCase().includes(_this2.buscar.toLowerCase())) {
+          mascota.mostrar = true;
+        }
+
+        return mascota;
+      });
+      this.$forceUpdate();
     }
   },
   mounted: function mounted() {
@@ -5512,6 +5836,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: {
+    usuario: {
+      type: Object,
+      required: true
+    }
+  },
   data: function data() {
     return {
       sexos: [{
@@ -5519,9 +5849,10 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         nombre: 'Hembra'
       }],
-      razas: ['Labrador', 'Poodle', 'Pug', 'Bulldog', 'Pitbull', 'Chihuahua', 'Otro'],
+      razas: [],
       errors: {},
       registro: {
+        duenio: this.usuario.id,
         imagen: '',
         nombre: '',
         raza: '',
@@ -5544,13 +5875,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios[metodo](url, datos).then(function (response) {
-        console.log(response.data, _this.step);
+        console.log(response.data, _this.step, _this.step == '1', _this.step == '2');
 
         if (_this.step == '1') {
           _this.cartilla.id_mascota = response.data.id;
           _this.registro.id = response.data.id;
           _this.step = '2';
-        } else if (_this.step === '2') {
+        } else if (_this.step == '2') {
           _this.$root.$emit('close', 'registroMascota');
         }
       })["catch"](function (error) {
@@ -5559,28 +5890,38 @@ __webpack_require__.r(__webpack_exports__);
         console.log(_this.errors);
       });
     },
-    mostrarCartilla: function mostrarCartilla(e) {
+    conseguirRazas: function conseguirRazas() {
       var _this2 = this;
 
-      var reader = new FileReader();
-      reader.readAsDataURL(e.target.files[0]);
-
-      reader.onload = function (e) {
-        _this2.cartilla.imagen = e.target.result;
-      };
+      axios.get('/mascotas/razas').then(function (response) {
+        _this2.razas = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
     },
-    mostrarImagen: function mostrarImagen(e) {
+    mostrarCartilla: function mostrarCartilla(e) {
       var _this3 = this;
 
       var reader = new FileReader();
       reader.readAsDataURL(e.target.files[0]);
 
       reader.onload = function (e) {
-        _this3.registro.imagen = e.target.result;
+        _this3.cartilla.imagen = e.target.result;
+      };
+    },
+    mostrarImagen: function mostrarImagen(e) {
+      var _this4 = this;
+
+      var reader = new FileReader();
+      reader.readAsDataURL(e.target.files[0]);
+
+      reader.onload = function (e) {
+        _this4.registro.imagen = e.target.result;
       };
     },
     siguiente: function siguiente() {
-      this.registro.sexo = this.sexos[0].nombre;
+      this.registro.sexo = this.registro.sexo.nombre ? this.registro.sexo.nombre : this.registro.sexo;
+      this.registro.raza = this.registro.raza.raza ? this.registro.raza.raza : this.registro.raza;
 
       if (this.registro.id) {
         this.sincronizar(this.registro, 'put', 'mascotas/actualizar/');
@@ -5594,6 +5935,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     console.log('Component mounted.');
+    this.conseguirRazas();
   }
 });
 
@@ -5626,6 +5968,7 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
 Vue.component('example-component', (__webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]));
 Vue.component('registro-mascota', (__webpack_require__(/*! ./components/RegistrarMascota.vue */ "./resources/js/components/RegistrarMascota.vue")["default"]));
 Vue.component('mostrar-mascota', (__webpack_require__(/*! ./components/MostrarMascota.vue */ "./resources/js/components/MostrarMascota.vue")["default"]));
+Vue.component('actualizar-mascota', (__webpack_require__(/*! ./components/ActualizarMascota.vue */ "./resources/js/components/ActualizarMascota.vue")["default"]));
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -5635,11 +5978,15 @@ Vue.component('mostrar-mascota', (__webpack_require__(/*! ./components/MostrarMa
 var app = new Vue({
   el: '#app',
   data: {
+    mascota: '',
     formularios: {
       registroMascota: {
         mostrar: false
       },
       mostrarMascota: {
+        mostrar: false
+      },
+      actualizarMascota: {
         mostrar: false
       }
     }
@@ -5655,15 +6002,20 @@ var app = new Vue({
       }
     }
   },
-  afterMount: function afterMount() {
+  beforeMount: function beforeMount() {
     var _this = this;
 
     this.$root.$on('close', function (value) {
       _this.formularios[value].mostrar = false;
 
-      if (value === 'registroMascota') {
+      if (value == 'registroMascota' || value == 'actualizarMascota') {
         _this.formularios.mostrarMascota.mostrar = true;
       }
+    });
+    this.$root.$on('editar-mascota', function (value) {
+      _this.formularios.mostrarMascota.mostrar = false;
+      _this.formularios.actualizarMascota.mostrar = true;
+      _this.mascota = value;
     });
   }
 });
@@ -10757,6 +11109,30 @@ ___CSS_LOADER_EXPORT___.push([module.id, ":root{--vs-colors--lightest:rgba(60,60
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.actual {\r\n    fill: #00a8ff;\r\n    stroke: #00a8ff;\n}\r\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MostrarMascota.vue?vue&type=style&index=0&lang=css&":
 /*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MostrarMascota.vue?vue&type=style&index=0&lang=css& ***!
@@ -10774,7 +11150,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.actual {\r\n    fill: #00a8ff;\r\n    stroke: #00a8ff;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.actual {\r\n    fill: #00a8ff;\r\n    stroke: #00a8ff;\n}\n.hover-container:hover {\r\n    background-color: #b0b0b0;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -28330,6 +28706,36 @@ var update = _style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMP
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ActualizarMascota.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css&");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MostrarMascota.vue?vue&type=style&index=0&lang=css&":
 /*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/MostrarMascota.vue?vue&type=style&index=0&lang=css& ***!
@@ -28669,6 +29075,47 @@ module.exports = function (list, options) {
 
 /***/ }),
 
+/***/ "./resources/js/components/ActualizarMascota.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/ActualizarMascota.vue ***!
+  \*******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ActualizarMascota_vue_vue_type_template_id_24fd750d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ActualizarMascota.vue?vue&type=template&id=24fd750d& */ "./resources/js/components/ActualizarMascota.vue?vue&type=template&id=24fd750d&");
+/* harmony import */ var _ActualizarMascota_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ActualizarMascota.vue?vue&type=script&lang=js& */ "./resources/js/components/ActualizarMascota.vue?vue&type=script&lang=js&");
+/* harmony import */ var _ActualizarMascota_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ActualizarMascota.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+;
+
+
+/* normalize component */
+
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _ActualizarMascota_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ActualizarMascota_vue_vue_type_template_id_24fd750d___WEBPACK_IMPORTED_MODULE_0__.render,
+  _ActualizarMascota_vue_vue_type_template_id_24fd750d___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ActualizarMascota.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/ExampleComponent.vue":
 /*!******************************************************!*\
   !*** ./resources/js/components/ExampleComponent.vue ***!
@@ -28790,6 +29237,22 @@ component.options.__file = "resources/js/components/RegistrarMascota.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/ActualizarMascota.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/ActualizarMascota.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ActualizarMascota.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************!*\
   !*** ./resources/js/components/ExampleComponent.vue?vue&type=script&lang=js& ***!
@@ -28838,6 +29301,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************!*\
+  !*** ./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ActualizarMascota.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=style&index=0&lang=css&");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/MostrarMascota.vue?vue&type=style&index=0&lang=css&":
 /*!*************************************************************************************!*\
   !*** ./resources/js/components/MostrarMascota.vue?vue&type=style&index=0&lang=css& ***!
@@ -28860,6 +29336,23 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_9_0_rules_0_use_2_node_modules_vue_loader_lib_index_js_vue_loader_options_RegistrarMascota_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader/dist/cjs.js!../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RegistrarMascota.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-9[0].rules[0].use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/RegistrarMascota.vue?vue&type=style&index=0&lang=css&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ActualizarMascota.vue?vue&type=template&id=24fd750d&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/ActualizarMascota.vue?vue&type=template&id=24fd750d& ***!
+  \**************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_template_id_24fd750d___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_template_id_24fd750d___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ActualizarMascota_vue_vue_type_template_id_24fd750d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./ActualizarMascota.vue?vue&type=template&id=24fd750d& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=template&id=24fd750d&");
 
 
 /***/ }),
@@ -28911,6 +29404,616 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegistrarMascota_vue_vue_type_template_id_002e1e14___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RegistrarMascota_vue_vue_type_template_id_002e1e14___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./RegistrarMascota.vue?vue&type=template&id=002e1e14& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/RegistrarMascota.vue?vue&type=template&id=002e1e14&");
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=template&id=24fd750d&":
+/*!*****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/ActualizarMascota.vue?vue&type=template&id=24fd750d& ***!
+  \*****************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function () {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card" }, [
+    _c("div", { staticClass: "card-header center-content" }, [
+      _c("p", [_vm._v("Registra tu mascota")]),
+      _vm._v(" "),
+      _c(
+        "svg",
+        {
+          staticClass: "mx-auto d-block w-full",
+          attrs: {
+            viewBox: "0 0 1440 125",
+            fill: "none",
+            xmlns: "http://www.w3.org/2000/svg",
+          },
+        },
+        [
+          _c("g", { attrs: { id: "Desktop - 1" } }, [
+            _c("g", { attrs: { id: "general" } }, [
+              _c("rect", {
+                class: { actual: _vm.step >= "1" },
+                staticStyle: { stroke: "none" },
+                attrs: {
+                  id: "Rectangle 1",
+                  x: "10",
+                  y: "48",
+                  width: "350",
+                  height: "30",
+                  rx: "10",
+                  fill: "#C4C4C4",
+                },
+              }),
+              _vm._v(" "),
+              _c("circle", {
+                class: { actual: _vm.step >= "1" },
+                staticStyle: { fill: "none" },
+                attrs: {
+                  id: "Ellipse 1",
+                  cx: "465",
+                  cy: "63",
+                  r: "41",
+                  stroke: "#C4C4C4",
+                  "stroke-width": "8",
+                },
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                class: { actual: _vm.step >= "2" },
+                staticStyle: { stroke: "none" },
+                attrs: {
+                  id: "Rectangle 4",
+                  x: "569.927",
+                  y: "48.0734",
+                  width: "300.074",
+                  height: "30",
+                  rx: "10",
+                  transform: "rotate(-0.00832114 569.927 48.0734)",
+                  fill: "#C4C4C4",
+                },
+              }),
+              _vm._v(" "),
+              _c("circle", {
+                class: { actual: _vm.step >= "2" },
+                staticStyle: { fill: "none" },
+                attrs: {
+                  id: "Ellipse 3",
+                  cx: "975.003",
+                  cy: "63.0145",
+                  r: "41",
+                  transform: "rotate(179.992 975.003 63.0145)",
+                  stroke: "#C4C4C4",
+                  "stroke-width": "8",
+                },
+              }),
+              _vm._v(" "),
+              _c("rect", {
+                class: { actual: _vm.step >= "3" },
+                staticStyle: { stroke: "none" },
+                attrs: {
+                  id: "Rectangle 3",
+                  x: "1430.01",
+                  y: "77.9484",
+                  width: "350",
+                  height: "30",
+                  rx: "10",
+                  transform: "rotate(179.992 1430.01 77.9484)",
+                  fill: "#C4C4C4",
+                },
+              }),
+            ]),
+            _vm._v(" "),
+            _c("g", { attrs: { id: "mascota-listo" } }, [
+              _c("circle", {
+                class: { actual: _vm.step >= "2" },
+                staticStyle: { stroke: "none" },
+                attrs: { cx: "465", cy: "63", r: "30", fill: "#C4C4C4" },
+              }),
+            ]),
+            _vm._v(" "),
+            _c("g", { attrs: { id: "cartilla-listo" } }, [
+              _c("circle", {
+                class: { actual: _vm.step >= "2" },
+                staticStyle: { stroke: "none" },
+                attrs: {
+                  cx: "975.003",
+                  cy: "63.0145",
+                  r: "30",
+                  transform: "rotate(179.992 975.003 63.0145)",
+                  fill: "#C4C4C4",
+                },
+              }),
+            ]),
+          ]),
+        ]
+      ),
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card-body" }, [
+      _vm.step == "1"
+        ? _c(
+            "form",
+            {
+              on: {
+                submit: function ($event) {
+                  $event.preventDefault()
+                  return _vm.siguiente.apply(null, arguments)
+                },
+              },
+            },
+            [
+              _c("div", { staticClass: "row mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 col-form-label text-md-end",
+                    attrs: { for: "imagen" },
+                  },
+                  [_vm._v("Imagen")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "imagen",
+                      type: "file",
+                      name: "imagen",
+                      value: "",
+                      autocomplete: "imagen",
+                      autofocus: "",
+                    },
+                    on: { change: _vm.mostrarImagen },
+                  }),
+                ]),
+                _vm._v(" "),
+                _vm.errors.imagen
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-danger col-md-8 fs-6 mx-auto",
+                      },
+                      _vm._l(_vm.errors.imagen, function (error) {
+                        return _c(
+                          "span",
+                          { key: error, staticClass: "font-weight-bold" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mb-3" }, [
+                _c("div", { staticClass: "col-md-6 offset-md-4" }, [
+                  _c("img", {
+                    staticClass: "img-fluid",
+                    attrs: { src: _vm.registro.imagen, alt: "" },
+                  }),
+                ]),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 col-form-label text-md-end",
+                    attrs: { for: "name" },
+                  },
+                  [_vm._v("Nombre")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.registro.nombre,
+                        expression: "registro.nombre",
+                      },
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "name",
+                      type: "text",
+                      name: "name",
+                      value: "",
+                      required: "",
+                      autocomplete: "name",
+                      autofocus: "",
+                    },
+                    domProps: { value: _vm.registro.nombre },
+                    on: {
+                      input: function ($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.registro, "nombre", $event.target.value)
+                      },
+                    },
+                  }),
+                ]),
+                _vm._v(" "),
+                _vm.errors.nombre
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-danger col-md-8 fs-6 mx-auto",
+                      },
+                      _vm._l(_vm.errors.nombre, function (error) {
+                        return _c(
+                          "span",
+                          { key: error, staticClass: "font-weight-bold pf-1" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 col-form-label text-md-end",
+                    attrs: { for: "raza" },
+                  },
+                  [_vm._v("Raza")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-md-6" },
+                  [
+                    _c("v-select", {
+                      attrs: {
+                        options: _vm.razas,
+                        label: "raza",
+                        placeholder: "Seleccione una raza",
+                        taggable: "",
+                        "push-tags": "",
+                      },
+                      model: {
+                        value: _vm.registro.raza,
+                        callback: function ($$v) {
+                          _vm.$set(_vm.registro, "raza", $$v)
+                        },
+                        expression: "registro.raza",
+                      },
+                    }),
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _vm.errors.raza
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-danger col-md-8 fs-6 mx-auto",
+                      },
+                      _vm._l(_vm.errors.raza, function (error) {
+                        return _c(
+                          "span",
+                          { key: error, staticClass: "font-weight-bold" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 col-form-label text-md-end",
+                    attrs: { for: "color" },
+                  },
+                  [_vm._v("Color")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.registro.color,
+                        expression: "registro.color",
+                      },
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "color",
+                      type: "text",
+                      name: "color",
+                      value: "",
+                      required: "",
+                      autocomplete: "color",
+                      autofocus: "",
+                    },
+                    domProps: { value: _vm.registro.color },
+                    on: {
+                      input: function ($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.registro, "color", $event.target.value)
+                      },
+                    },
+                  }),
+                ]),
+                _vm._v(" "),
+                _vm.errors.color
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-danger col-md-8 fs-6 mx-auto",
+                      },
+                      _vm._l(_vm.errors.color, function (error) {
+                        return _c(
+                          "span",
+                          { key: error, staticClass: "font-weight-bold" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 col-form-label text-md-end",
+                    attrs: { for: "edad" },
+                  },
+                  [_vm._v("Edad")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.registro.edad,
+                        expression: "registro.edad",
+                      },
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "edad",
+                      type: "number",
+                      name: "edad",
+                      value: "",
+                      required: "",
+                      autocomplete: "edad",
+                      autofocus: "",
+                    },
+                    domProps: { value: _vm.registro.edad },
+                    on: {
+                      input: function ($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(_vm.registro, "edad", $event.target.value)
+                      },
+                    },
+                  }),
+                ]),
+                _vm._v(" "),
+                _vm.errors.edad
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-danger col-md-8 fs-6 mx-auto",
+                      },
+                      _vm._l(_vm.errors.edad, function (error) {
+                        return _c(
+                          "span",
+                          { key: error, staticClass: "font-weight-bold" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 col-form-label text-md-end",
+                    attrs: { for: "sexo" },
+                  },
+                  [_vm._v("Sexo")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-md-6" },
+                  [
+                    _c("v-select", {
+                      attrs: {
+                        options: _vm.sexos,
+                        label: "nombre",
+                        placeholder: "Seleccione una opción",
+                      },
+                      model: {
+                        value: _vm.registro.sexo,
+                        callback: function ($$v) {
+                          _vm.$set(_vm.registro, "sexo", $$v)
+                        },
+                        expression: "registro.sexo",
+                      },
+                    }),
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _vm.errors.sexo
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-danger col-md-8 fs-6 mx-auto",
+                      },
+                      _vm._l(_vm.errors.sexo, function (error) {
+                        return _c(
+                          "span",
+                          { key: error, staticClass: "font-weight-bold" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _vm._m(0),
+            ]
+          )
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.step == "2"
+        ? _c(
+            "form",
+            {
+              on: {
+                submit: function ($event) {
+                  $event.preventDefault()
+                  return _vm.terminar.apply(null, arguments)
+                },
+              },
+            },
+            [
+              _c("div", { staticClass: "row mb-3" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "col-md-4 col-form-label text-md-end",
+                    attrs: { for: "cartilla" },
+                  },
+                  [_vm._v("Cartilla")]
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-6" }, [
+                  _c("input", {
+                    staticClass: "form-control",
+                    attrs: {
+                      id: "cartilla",
+                      type: "file",
+                      name: "cartilla",
+                      value: "",
+                      required: "",
+                      autocomplete: "cartilla",
+                      autofocus: "",
+                    },
+                    on: { change: _vm.mostrarCartilla },
+                  }),
+                ]),
+                _vm._v(" "),
+                _vm.errors.cartilla
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-danger col-md-8 fs-6 mx-auto",
+                      },
+                      _vm._l(_vm.errors.cartilla, function (error) {
+                        return _c(
+                          "span",
+                          { key: error, staticClass: "font-weight-bold" },
+                          [_vm._v(_vm._s(error))]
+                        )
+                      }),
+                      0
+                    )
+                  : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mb-3" }, [
+                _c("div", { staticClass: "col-md-6 offset-md-4" }, [
+                  _c("img", {
+                    staticClass: "img-fluid",
+                    attrs: { src: _vm.cartilla.imagen, alt: "" },
+                  }),
+                ]),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row mb-3" }, [
+                _c("div", { staticClass: "col-md-6 offset-md-4" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function ($event) {
+                          _vm.step = "1"
+                        },
+                      },
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Atrás\n                    "
+                      ),
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: { type: "submit" },
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Terminar\n                    "
+                      ),
+                    ]
+                  ),
+                ]),
+              ]),
+            ]
+          )
+        : _vm._e(),
+    ]),
+  ])
+}
+var staticRenderFns = [
+  function () {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row mb-3" }, [
+      _c("div", { staticClass: "col-md-6 offset-md-4" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+          [_vm._v("\n                        Continuar\n                    ")]
+        ),
+      ]),
+    ])
+  },
+]
+render._withStripped = true
+
 
 
 /***/ }),
@@ -28980,60 +30083,137 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "card" }, [
-    _vm._m(0),
+    _c("div", { staticClass: "card-header center-content" }, [
+      _c("p", [_vm._v("Buscar mascotas")]),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.buscar,
+            expression: "buscar",
+          },
+        ],
+        staticClass: "form-control",
+        attrs: { type: "text", placeholder: "Buscar..." },
+        domProps: { value: _vm.buscar },
+        on: {
+          keyup: function ($event) {
+            return _vm.buscarMascota()
+          },
+          input: function ($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.buscar = $event.target.value
+          },
+        },
+      }),
+    ]),
     _vm._v(" "),
     _c(
       "div",
       { staticClass: "card-body" },
       _vm._l(_vm.mascotas, function (mascota) {
-        return _c("div", { key: mascota.id, staticClass: "row mb-3" }, [
-          _c("div", { staticClass: "col-md-4" }, [
-            _c("img", {
-              staticClass: "img-fluid",
-              staticStyle: { "max-width": "200px" },
-              attrs: {
-                src: "storage/imagenes/mascotas/fotos/" + mascota.imagen,
-                alt: "",
-              },
-            }),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-4" }, [
-            _c("h3", [_vm._v(_vm._s(mascota.nombre))]),
+        return _c(
+          "div",
+          {
+            key: mascota.id,
+            staticClass:
+              "row border-2 border-bottom border-secondary pb-2 rounded center-content hover-container d-flex justify-content-between align-items-center",
+            class: { "d-none": !mascota.mostrar },
+          },
+          [
+            _c("div", { staticClass: "col-md-4 center-content" }, [
+              _c("p", [_c("b", [_vm._v(_vm._s(mascota.nombre))])]),
+              _vm._v(" "),
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "100%" },
+                attrs: {
+                  src: "storage/imagenes/mascotas/fotos/" + mascota.imagen,
+                  alt: "",
+                },
+              }),
+            ]),
             _vm._v(" "),
-            _c("p", [_vm._v("Color: " + _vm._s(mascota.color))]),
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("p", [
+                _c("b", [_vm._v("Color:")]),
+                _vm._v(" " + _vm._s(mascota.color)),
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("b", [_vm._v("Raza:")]),
+                _vm._v(" " + _vm._s(mascota.raza)),
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("b", [_vm._v("Edad:")]),
+                _vm._v(" " + _vm._s(mascota.edad)),
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _c("b", [_vm._v("Sexo:")]),
+                _vm._v(" " + _vm._s(mascota.sexo)),
+              ]),
+            ]),
             _vm._v(" "),
-            _c("p", [_vm._v("Raza: " + _vm._s(mascota.raza))]),
+            _c("div", { staticClass: "col-md-4 center-content" }, [
+              _c("p", [_vm._v("Cartilla de Vacunación")]),
+              _vm._v(" "),
+              _c("img", {
+                staticClass: "img-fluid",
+                staticStyle: { "max-width": "100%" },
+                attrs: {
+                  src: "storage/imagenes/mascotas/cartillas/" + mascota.imagen,
+                  alt: "",
+                },
+              }),
+            ]),
             _vm._v(" "),
-            _c("p", [_vm._v("Edad: " + _vm._s(mascota.edad))]),
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-4" }, [
-            _c("img", {
-              staticClass: "img-fluid",
-              staticStyle: { "max-width": "200px" },
-              attrs: {
-                src: "storage/imagenes/mascotas/cartillas/" + mascota.cartilla,
-                alt: "",
-              },
-            }),
-          ]),
-        ])
+            mascota.duenio == _vm.usuario.id
+              ? _c(
+                  "div",
+                  { staticClass: "col-md-12 d-flex justify-content-around" },
+                  [
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-primary",
+                        on: {
+                          click: function ($event) {
+                            return _vm.editarMascota(mascota)
+                          },
+                        },
+                      },
+                      [_vm._v("Editar")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-danger",
+                        on: {
+                          click: function ($event) {
+                            return _vm.eliminarMascota(mascota.id)
+                          },
+                        },
+                      },
+                      [_vm._v("Eliminar")]
+                    ),
+                  ]
+                )
+              : _vm._e(),
+          ]
+        )
       }),
       0
     ),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header center-content" }, [
-      _c("p", [_vm._v("Buscar mascotas")]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -29307,37 +30487,29 @@ var render = function () {
                   [_vm._v("Raza")]
                 ),
                 _vm._v(" "),
-                _c("div", { staticClass: "col-md-6" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
+                _c(
+                  "div",
+                  { staticClass: "col-md-6" },
+                  [
+                    _c("v-select", {
+                      attrs: {
+                        options: _vm.razas,
+                        label: "raza",
+                        placeholder: "Seleccione una raza",
+                        taggable: "",
+                        "push-tags": "",
+                      },
+                      model: {
                         value: _vm.registro.raza,
+                        callback: function ($$v) {
+                          _vm.$set(_vm.registro, "raza", $$v)
+                        },
                         expression: "registro.raza",
                       },
-                    ],
-                    staticClass: "form-control",
-                    attrs: {
-                      id: "raza",
-                      type: "text",
-                      name: "raza",
-                      value: "",
-                      required: "",
-                      autocomplete: "raza",
-                      autofocus: "",
-                    },
-                    domProps: { value: _vm.registro.raza },
-                    on: {
-                      input: function ($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.registro, "raza", $event.target.value)
-                      },
-                    },
-                  }),
-                ]),
+                    }),
+                  ],
+                  1
+                ),
                 _vm._v(" "),
                 _vm.errors.raza
                   ? _c(
