@@ -22,6 +22,7 @@ window.Vue = require('vue').default;
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('registro-mascota', require('./components/RegistrarMascota.vue').default);
 Vue.component('mostrar-mascota', require('./components/MostrarMascota.vue').default);
+Vue.component('actualizar-mascota', require('./components/ActualizarMascota.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,9 +33,11 @@ Vue.component('mostrar-mascota', require('./components/MostrarMascota.vue').defa
 const app = new Vue({
     el: '#app',
     data: {
+        mascota: '',
         formularios: {
             registroMascota: {mostrar: false},
             mostrarMascota: {mostrar: false},
+            actualizarMascota: {mostrar: false}
         }
     },
     methods: {
@@ -48,12 +51,17 @@ const app = new Vue({
             }
         }
     },
-    afterMount() {
+    beforeMount() {
         this.$root.$on('close', (value) => {
             this.formularios[value].mostrar = false;
-            if (value === 'registroMascota') {
+            if (value == 'registroMascota' || value == 'actualizarMascota') {
                 this.formularios.mostrarMascota.mostrar = true;
             }
+        });
+        this.$root.$on('editar-mascota', (value) => {
+            this.formularios.mostrarMascota.mostrar = false;
+            this.formularios.actualizarMascota.mostrar = true;
+            this.mascota = value;
         });
     }
 });

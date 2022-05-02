@@ -26,7 +26,7 @@
                     <label for="imagen" class="col-md-4 col-form-label text-md-end">Imagen</label>
 
                     <div class="col-md-6">
-                        <input id="imagen" type="file" class="form-control" name="imagen" value="" required autocomplete="imagen" autofocus @change="mostrarImagen">
+                        <input id="imagen" type="file" class="form-control" name="imagen" value="" autocomplete="imagen" autofocus @change="mostrarImagen">
                     </div>
                     <div v-if="errors.imagen" class="alert alert-danger col-md-8 fs-6 mx-auto">  
                         <span v-for="error in errors.imagen" :key="error" class="font-weight-bold">{{ error }}</span>
@@ -140,7 +140,7 @@
     import 'vue-select/dist/vue-select.css'
     export default {
         props: {
-            usuario: {
+            mascota: {
                 type: Object,
                 required: true
             }
@@ -154,17 +154,18 @@
                 razas: [],
                 errors: {},
                 registro: {
-                    duenio: this.usuario.id,
-                    imagen: '',
-                    nombre: '',
-                    raza: '',
-                    color: '',
-                    edad: '',
-                    sexo: '',
+                    id: this.mascota.id,
+                    duenio: this.mascota.duenio,
+                    imagen: 'storage/imagenes/mascotas/fotos/'+this.mascota.imagen,
+                    nombre: this.mascota.nombre,
+                    raza: this.mascota.raza,
+                    color: this.mascota.color,
+                    edad: this.mascota.edad,
+                    sexo: this.mascota.sexo
                 },
                 cartilla: {
-                    id_mascota: '',
-                    imagen: '',
+                    id_mascota: this.mascota.id,
+                    imagen: this.mascota.imagen
                 },
                 step: '1',
             }
@@ -178,11 +179,9 @@
                     .then(response => {
                         console.log(response.data, this.step, this.step == '1', this.step == '2');
                         if (this.step == '1') {
-                            this.cartilla.id_mascota = response.data.id;
-                            this.registro.id = response.data.id;
                             this.step = '2';
                         } else if (this.step == '2') {
-                            this.$root.$emit('close', 'registroMascota');
+                            this.$root.$emit('close', 'actualizarMascota');
                         }
                     })
                     .catch(error => {
@@ -217,11 +216,7 @@
             siguiente() {
                 this.registro.sexo = this.registro.sexo.nombre ? this.registro.sexo.nombre : this.registro.sexo;
                 this.registro.raza = this.registro.raza.raza ? this.registro.raza.raza : this.registro.raza;
-                if (this.registro.id) {
-                    this.sincronizar(this.registro, 'put', 'mascotas/actualizar/');
-                } else {
-                    this.sincronizar(this.registro, 'post', 'mascotas/continuar');
-                }
+                this.sincronizar(this.registro, 'post', 'mascotas/actualizacion');
             },
             terminar() {
                 this.sincronizar(this.cartilla, 'post', 'mascotas/terminar');
@@ -230,7 +225,30 @@
         mounted() {
             console.log('Component mounted.');
             this.conseguirRazas();
-        }
+        },
+        // watch: {
+        //     registro: {
+        //         handler() {
+        //             console.log(this.registro);
+        //             this.update = {
+        //                 id: false,
+        //                 duenio: false,
+        //                 nombre: false,
+        //                 imagen: false,
+        //                 raza: false,
+        //                 color: false,
+        //                 edad: false,
+        //                 sexo: false
+        //             };
+        //             for (let key in this.registro) {
+        //                 if (this.registro[key] != this.mascota[key]) {
+        //                     this.update[key] = true;
+        //                 }
+        //             }
+        //         },
+        //         deep: true
+        //     }
+        // }
     }
 </script>
 
