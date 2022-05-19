@@ -7,23 +7,23 @@
     <title>Creacion de usuarios</title>
 </head>
 <body>
-    <form id="usuarios" method="get">
+    <form id="frmUsuarios" method="get">
         Nombre: <input type="text" id="txtUsuario" required>
         Clave: <input type="password" id="txtClave" required>
         <input type="submit" value="Enviar">
     </form>
     <script>
-        const frm = document.gerySeelector('#frmUsuarios');
-        frm.addEventListener('submit', e=> {
+        const frm = document.querySelector('#frmUsuarios');
+        frm.addEventListener('submit', e=>{
             e.preventDefault();
 
-            const usuario = document.querySelector("txtUsuario").value,
-                  clave = document.querySelector("txtClave").value;
-            let datos ={
+            const usuario = document.querySelector("#txtUsuario").value,
+                clave = document.querySelector("#txtClave").value;
+            let datos = {
                 usuario,
                 clave
             };
-            fetch('/usuarios', {
+            fetch('/usuarios',{
                 method : 'GET',
                 body : JSON.stringify(datos),
                 headers : {
@@ -37,4 +37,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
