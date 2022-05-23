@@ -19,7 +19,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body style="background-image: url('/storage/imagenes/fondo.jpg'); font-size: 1.2rem;">
+<body style="font-size: 1.2rem;">
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
@@ -52,15 +52,32 @@
                                 </li>
                             @endif
                         @else
-                            <li class="nav-item">
-                                <a href="#" class="nav-link link" style="background-color: #fafafa; margin: 0 2px; border-radius: 10px;" @click="mostrarFormulario('registroMascota')">Registrar mascota</a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link link" style="background-color: #fafafa; margin: 0 2px; border-radius: 10px;" @click="mostrarFormulario('mostrarMascota')">Mostrar mascota</a>
+                        <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="background-color: #fafafa; margin: 0 2px; border-radius: 10px;">
+                                    Para mi mascota
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#" @click="mostrarFormulario('adiestramiento')">Adiestramiento</a>
+                                    <a class="dropdown-item" href="#" @click="mostrarFormulario('cuidados')">Cuido</a>
+                                </div>
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="background-color: #fafafa; margin: 0 2px; border-radius: 10px;">
-                                    {{ Auth::user()->name }}
+                                    Mascotas y Match
+                                </a>
+
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="#" @click="mostrarFormulario('misMatches')">Mis matches</a>
+                                    <a class="dropdown-item" href="#" @click="mostrarFormulario('registroMascota')">Registrar mascota</a>
+                                    <a class="dropdown-item" href="#" @click="mostrarFormulario('mostrarMascota')">Mostrar mascota</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="background-color: #fafafa; margin: 0 2px; border-radius: 10px;">
+                                    <!-- Una imagen al lado del nombre del usuario -->
+                                    <!-- <img src="/storage/imagenes/{{ Auth::user()->imagen }}" alt="Imagen de usuario" width="30" style="border-radius: 50%;"> -->
+                                    {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -85,5 +102,7 @@
             @yield('content')
         </main>
     </div>
+
+    <script src="storage/vendors/ckeditor/ckeditor.js"></script>
 </body>
 </html>

@@ -21,7 +21,7 @@
             }
         </style>
     </head>
-    <body style="background-image: url('/storage/imagenes/fondo.jpg');" class="d-flex align-items-center justify-content-center">
+    <body class="d-flex align-items-center justify-content-center">
         <div class="container container-fluid text-center fs-1 p-5 pl-10 pr-10" style="background-color: rgba(255,255,255,.5); border-radius: 10px;">
             <div class="row justify-content-center gap-4">
                 <a href="{{ url('/home') }}" class="navbar-brand">
@@ -38,6 +38,10 @@
                 <a href="{{ route('facebook.login', 'facebook') }}" class="col-md-8 btn btn-primary flex-row justify-content-center">
                     <img src="https://www.facebook.com/images/fb_icon_325x325.png" alt="Facebook logo" class="img-fluid" style="width: 50px; float: left; border: 2px solid #ccc; border-radius: 50%;">
                     <h5 class="card-title">Iniciar sesión con Facebook</h5>
+                </a>
+                <hr>
+                <a href="{{ route('mimascota') }}" class="col-md-8 btn btn-primary">
+                    <h5 class="card-title">Para mi mascota</h5>
                 </a>
             </div>
         </div>

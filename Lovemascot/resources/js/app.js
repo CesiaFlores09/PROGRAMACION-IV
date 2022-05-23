@@ -23,6 +23,11 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 Vue.component('registro-mascota', require('./components/RegistrarMascota.vue').default);
 Vue.component('mostrar-mascota', require('./components/MostrarMascota.vue').default);
 Vue.component('actualizar-mascota', require('./components/ActualizarMascota.vue').default);
+Vue.component('mis-matches', require('./components/MisMatches.vue').default);
+Vue.component('adiestramiento', require('./components/Adiestramientos.vue').default);
+Vue.component('cuidados', require('./components/Cuidados.vue').default);
+Vue.component('nuevo-adiestramiento', require('./components/NuevoAdiestramiento.vue').default);
+Vue.component('nuevo-cuidado', require('./components/NuevoCuidado.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -37,7 +42,12 @@ const app = new Vue({
         formularios: {
             registroMascota: {mostrar: false},
             mostrarMascota: {mostrar: false},
-            actualizarMascota: {mostrar: false}
+            actualizarMascota: {mostrar: false},
+            misMatches: {mostrar: false},
+            adiestramiento: {mostrar: false},
+            cuidados: {mostrar: false},
+            nuevoAdiestramiento: {mostrar: false},
+            nuevoCuidado: {mostrar: false},
         }
     },
     methods: {
@@ -56,6 +66,18 @@ const app = new Vue({
             this.formularios[value].mostrar = false;
             if (value == 'registroMascota' || value == 'actualizarMascota') {
                 this.formularios.mostrarMascota.mostrar = true;
+            }
+        });
+        this.$root.$on('open', (value) => {
+            this.formularios[value].mostrar = true;
+            if (value == 'nuevoAdiestramiento') {
+                this.formularios.adiestramiento.mostrar = false;
+            } else if (value == 'adiestramiento') {
+                this.formularios.nuevoAdiestramiento.mostrar = false;
+            } else if (value == 'nuevoCuidado') {
+                this.formularios.cuidados.mostrar = false;
+            } else if (value == 'cuidados') {
+                this.formularios.nuevoCuidado.mostrar = false;
             }
         });
         this.$root.$on('editar-mascota', (value) => {

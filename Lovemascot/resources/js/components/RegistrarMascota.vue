@@ -26,7 +26,7 @@
                     <label for="imagen" class="col-md-4 col-form-label text-md-end">Imagen</label>
 
                     <div class="col-md-6">
-                        <input id="imagen" type="file" class="form-control" name="imagen" value="" required autocomplete="imagen" autofocus @change="mostrarImagen">
+                        <input id="imagen" type="file" class="form-control" name="imagen" required autofocus @change="mostrarImagen">
                     </div>
                     <div v-if="errors.imagen" class="alert alert-danger col-md-8 fs-6 mx-auto">  
                         <span v-for="error in errors.imagen" :key="error" class="font-weight-bold">{{ error }}</span>
@@ -104,19 +104,26 @@
             </form>
             <form v-if="step == '2'" @submit.prevent="terminar">
                 <div class="row mb-3">
-                    <label for="cartilla" class="col-md-4 col-form-label text-md-end">Cartilla</label>
+                    <h3>Cartilla de vacunación</h3>
 
-                    <div class="col-md-6">
-                        <input id="cartilla" type="file" class="form-control" name="cartilla" value="" required autocomplete="cartilla" autofocus @change="mostrarCartilla">
+                    <div class="row" v-for="vacuna in vacunas" :key="vacuna.id">
+                        <div class="col-md-4">
+                            <label for="vacuna.id" class="col-form-label text-md-right">{{ vacuna.nombre }}</label>
+                        </div>
+                        <div class="col-md-6">
+                            <input key="vacuna.id" id="vacuna.id" type="checkbox" :value="vacuna.id" @change="vacunaSeleccionada(vacuna.id)">
+                        </div>
                     </div>
-                    <div v-if="errors.cartilla" class="alert alert-danger col-md-8 fs-6 mx-auto">  
-                        <span v-for="error in errors.cartilla" :key="error" class="font-weight-bold">{{ error }}</span>
-                    </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6 offset-md-4">
-                        <img :src="cartilla.imagen" class="img-fluid" alt="">
+                    <div class="col-md-12">
+                        <form class="col-md-12" @submit.prevent="agregarVacuna">
+                            <div class="row">
+                                <h4 class="mb-3">Agregar vacuna</h4>
+                            </div>
+                            <div class="row">
+                                <input type="text" class="form-control col-md-6" v-model="nuevaVacuna" placeholder="Nombre de la vacuna">
+                                <button type="submit" class="btn btn-primary col-md-4">Agregar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
 
@@ -152,6 +159,7 @@
                     { nombre: 'Hembra' }
                 ],
                 razas: [],
+                vacunas: [],
                 errors: {},
                 registro: {
                     duenio: this.usuario.id,
@@ -167,6 +175,8 @@
                     imagen: '',
                 },
                 step: '1',
+                nuevaVacuna: '',
+                raza: '',
             }
         },
         components: {
@@ -181,6 +191,8 @@
                             this.cartilla.id_mascota = response.data.id;
                             this.registro.id = response.data.id;
                             this.step = '2';
+                            this.raza = response.data.raza;
+                            this.conseguirVacunas(response.data.raza);
                         } else if (this.step == '2') {
                             this.$root.$emit('close', 'registroMascota');
                         }
@@ -189,6 +201,18 @@
                         console.log(error);
                         this.errors = error.response.data.errors;
                         console.log(this.errors);
+                    })
+            },
+            conseguirVacunas(raza) {
+                axios.post('/vacunas', {raza})
+                    .then(response => {
+                        this.vacunas = response.data;
+                        this.vacunas.forEach(vacuna => {
+                            vacuna.seleccionada = false;
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
                     })
             },
             conseguirRazas() {
@@ -200,12 +224,9 @@
                         console.log(error);
                     });
             },
-            mostrarCartilla(e) {
-                var reader = new FileReader();
-                reader.readAsDataURL(e.target.files[0]);
-                reader.onload = (e) => {
-                    this.cartilla.imagen = e.target.result;
-                }
+            agregarVacuna() {
+                this.vacunas.push({nombre: this.nuevaVacuna, id: this.vacunas.length + 1, seleccionada: false});
+                this.nuevaVacuna = '';
             },
             mostrarImagen(e) {
                 var reader = new FileReader();
@@ -218,13 +239,25 @@
                 this.registro.sexo = this.registro.sexo.nombre ? this.registro.sexo.nombre : this.registro.sexo;
                 this.registro.raza = this.registro.raza.raza ? this.registro.raza.raza : this.registro.raza;
                 if (this.registro.id) {
-                    this.sincronizar(this.registro, 'put', 'mascotas/actualizar/');
+                    this.sincronizar(this.registro, 'put', 'mascotas/actualizar');
                 } else {
                     this.sincronizar(this.registro, 'post', 'mascotas/continuar');
                 }
             },
+            vacunaSeleccionada(id) {
+                this.vacunas.forEach(vacuna => {
+                    if (vacuna.id == id) {
+                        vacuna.seleccionada = true;
+                    }
+                });
+            },
             terminar() {
-                this.sincronizar(this.cartilla, 'post', 'mascotas/terminar');
+                let datos = {
+                    raza: this.raza,
+                    id_mascota: this.cartilla.id_mascota,
+                    vacunas: this.vacunas
+                }
+                this.sincronizar(datos, 'post', 'mascotas/terminar');
             }
         },
         mounted() {

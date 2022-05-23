@@ -5,24 +5,33 @@
             <input type="text" v-model="buscar" placeholder="Buscar..." class="form-control" @keyup="buscarMascota()">
         </div>
         <div class="card-body">
-            <div v-for="mascota in mascotas" class="row border-2 border-bottom border-secondary pb-2 rounded center-content hover-container d-flex justify-content-between align-items-center" :key="mascota.id" :class="{'d-none': !mascota.mostrar}">
-                <div class="col-md-4 center-content">
-                    <p><b>{{ mascota.nombre }}</b></p>
-                    <img :src="'storage/imagenes/mascotas/fotos/'+mascota.imagen" alt="" class="img-fluid" style="max-width: 100%;">
+            <div v-for="mascota in mascotas" class="row border-2 border-bottom border-secondary pb-2 rounded center-content hover-container d-flex justify-content-between align-items-center" :key="mascota.id" :class="{'d-none': !mascota.mostrar, 'border border-success': mascota.actual}">
+                <div class="row">
+                    <div class="col-md-6 center-content">
+                        <p><b>{{ mascota.nombre }}</b></p>
+                        <img :src="'storage/imagenes/mascotas/fotos/'+mascota.imagen" alt="" class="img-fluid" style="max-width: 100%;">
+                    </div>
+                    <div class="col-md-6">
+                        <p><b>Color:</b> {{ mascota.color }}</p>
+                        <p><b>Raza:</b> {{ mascota.raza }}</p>
+                        <p><b>Edad:</b> {{ mascota.edad }}</p>
+                        <p><b>Sexo:</b> {{ mascota.sexo }}</p>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <p><b>Color:</b> {{ mascota.color }}</p>
-                    <p><b>Raza:</b> {{ mascota.raza }}</p>
-                    <p><b>Edad:</b> {{ mascota.edad }}</p>
-                    <p><b>Sexo:</b> {{ mascota.sexo }}</p>
-                </div>
-                <div class="col-md-4 center-content">
-                    <p>Cartilla de Vacunación</p>
-                    <img :src="'storage/imagenes/mascotas/cartillas/'+mascota.imagen" alt="" class="img-fluid" style="max-width: 100%;">
-                </div>
-                <div v-if="mascota.duenio == usuario.id" class="col-md-12 d-flex justify-content-around">
-                    <button class="btn btn-primary" @click="editarMascota(mascota)">Editar</button>
-                    <button class="btn btn-danger" @click="eliminarMascota(mascota.id)">Eliminar</button>
+                <div class="row">
+                    <div v-if="mascota.duenio == usuario.id" class="col-md-12 d-flex justify-content-around">
+                        <button v-if="!mascota.actual" class="btn btn-success" @click="seleccionarMascota(mascota.id)">Seleccionar</button>
+                        <button class="btn btn-primary" @click="editarMascota(mascota)">Editar</button>
+                        <button class="btn btn-danger" @click="eliminarMascota(mascota.id)">Eliminar</button>
+                    </div>
+                    <div v-else class="col-md-12 d-flex justify-content-around">
+                        <button class="btn btn-primary" @click="match(mascota.id)" v-if="mascota.match == 'sin match'">Enviar Match</button>
+                        <button class="btn btn-primary" @click="cancelarMatch(mascota.id)" v-else-if="mascota.match == 'enviado' && mascota.estado == 0">Cancelar Match</button>
+                        <button class="btn btn-primary" @click="aceptarMatch(mascota.id)" v-else-if ="mascota.match == 'recibido' && mascota.estado == 0">Aceptar Match</button>
+                        <button class="btn btn-danger" @click="rechazarMatch(mascota.id)" v-if="mascota.match == 'recibido' && mascota.estado == 0">Rechazar Match</button>
+                        <button class="btn btn-danger" @click="rechazarMatch(mascota.id)" v-else-if="mascota.match == 'recibido' && mascota.estado == 1">Eliminar Match</button>
+                        <button class="btn btn-danger" @click="cancelarMatch(mascota.id)" v-else-if="mascota.match == 'enviado' && mascota.estado == 1">Eliminar Match</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,6 +100,46 @@
                     return mascota;
                 });
                 this.$forceUpdate();
+            },
+            seleccionarMascota(idMascota) {
+                axios.post('/mascotas/actual', {
+                    idMascota
+                })
+                .then(response => {
+                    console.log(response.data);
+                    this.sincronizar({}, 'get', '/mascotas/mostrar');
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            },
+            match(para) {
+                axios.post('match/enviar', {para})
+                .then(response => {
+                    console.log(response.data);
+                    this.sincronizar({}, 'get', '/mascotas/mostrar');
+                })
+            },
+            cancelarMatch(para) {
+                axios.post('match/cancelar', {para})
+                .then(response => {
+                    console.log(response.data);
+                    this.sincronizar({}, 'get', '/mascotas/mostrar');
+                })
+            },
+            aceptarMatch(de) {
+                axios.post('match/aceptar', {de, estado: 1})
+                .then(response => {
+                    console.log(response.data);
+                    this.sincronizar({}, 'get', '/mascotas/mostrar');
+                })
+            },
+            rechazarMatch(de) {
+                axios.post('match/rechazar', {de})
+                .then(response => {
+                    console.log(response.data);
+                    this.sincronizar({}, 'get', '/mascotas/mostrar');
+                })
             }
         },
         mounted() {

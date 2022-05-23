@@ -19,12 +19,13 @@ class CrearMascotas extends Migration
             $table->string('cartilla')->nullable();
             $table->string('imagen')->nullable();
             $table->string('nombre');
-            $table->string('raza');
+            $table->unsignedBigInteger('raza');
             $table->string('color');
             $table->string('edad');
             $table->string('sexo');
             $table->timestamps();
             $table->foreign('duenio')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('raza')->references('id')->on('Especies')->onDelete('cascade');
         });
     }
 
