@@ -39,9 +39,12 @@ Route::post('match/aceptar', [App\Http\Controllers\MatchController::class, 'upda
 Route::post('match/rechazar', [App\Http\Controllers\MatchController::class, 'rechazar'])->name('match.rechazar');
 Route::post('/match/cancelar', [App\Http\Controllers\MatchController::class, 'cancelar'])->name('match.cancelar');
 Route::get('/especies/mostrar', [App\Http\Controllers\EspeciesController::class, 'index'])->name('especies.mostrar');
-Route::post('/consejos/mostrar', [App\Http\Controllers\ConsejosController::class, 'conseguirConsejos'])->name('consejos.mostrar');
+Route::post('/cuidados/mostrar', [App\Http\Controllers\ConsejosController::class, 'conseguirConsejo'])->name('consejos.mostrar');
 Route::post('/adiestramiento/mostrar', [App\Http\Controllers\AdiestramientosController::class, 'conseguirAdiestramiento'])->name('adiestramiento.mostrar');
 Route::post('adiestramiento/nuevo', [App\Http\Controllers\AdiestramientosController::class, 'store'])->name('adiestramiento.nuevo');
 Route::post('adiestramiento/{id}', [App\Http\Controllers\AdiestramientosController::class, 'show'])->name('adiestramiento.show');
+Route::post('cuidos/nuevo', [App\Http\Controllers\ConsejosController::class, 'store'])->name('cuidos.nuevo');
+Route::post('cuidos/{id}', [App\Http\Controllers\ConsejosController::class, 'show'])->name('cuidos.show');
+
 
 Route::post('/vacunas', [App\Http\Controllers\VacunasController::class, 'vacunas'])->name('mostrar.vacunas');
