@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row" v-if="step == 2">
+            <div class="row" v-show="step == 2">
                 <div class="col-sm-12">
                     <div class="card">
                         <div class="card-body" id="contenedor1">
@@ -55,7 +55,7 @@
     </div>
 </template>
 
-<script>
+<script async defer>
     export default {
         data() {
             return {
@@ -72,30 +72,41 @@
             seleccionarEspecie(especie) {
                 this.step = 1;
                 this.adiestramientos = [];
-                this.sincronizar({id: especie.id,}, 'post', '/adiestramiento/mostrar')
-                    .then(response => {
-                        this.adiestramientos = response.data;
-                    });
+                this.sincronizar({id: especie.id}, 'post', '/adiestramiento/mostrar')
+                        .then(response => {
+                            this.adiestramientos = response.data;
+                            localStorage.setItem('adiestramientos', JSON.stringify(response.data));
+                        });
             },
             seleccionarAdiestramiento(adiestramiento) {
                 this.step = 2;
                 this.adiestramiento = adiestramiento;
-                let contenedor = document.getElementById('contenedor1');
-                contenedor.innerHTML = this.adiestramiento.descripcion;
+                let el = document.getElementById('contenedor1');
+                el.innerHTML = adiestramiento.descripcion;
             },
             regresar() {
                 this.step -= 1;
-                this.adiestramientos = [];
+                this.adiestramientos = this.step == 0 ? [] : this.adiestramientos;
             },
             nuevoAdiestramiento() {
                 this.$root.$emit('open', 'nuevoAdiestramiento');
             },
         },
         mounted() {
-            this.sincronizar({}, 'get', '/especies/mostrar')
-                .then(response => {
-                    this.especies = response.data;
-                });
+            // this.sincronizar({}, 'get', '/especies/mostrar')
+            //     .then(response => {
+            //         this.especies = response.data;
+            //     });
+            let especies = JSON.parse(localStorage.getItem('especies'));
+            if (especies || especies == '[]') {
+                this.especies = especies;
+            } else {
+                this.sincronizar({}, 'get', '/especies/mostrar')
+                    .then(response => {
+                        this.especies = response.data;
+                        localStorage.setItem('especies', JSON.stringify(response.data));
+                    });
+            }
         }
     }
 </script>

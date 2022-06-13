@@ -78,10 +78,20 @@
                     descripcion: this.editor.getData(),
                 }
                 console.log(datos)
+                let adiestramientos = localStorage.getItem('adiestramientos')
+                if (adiestramientos) {
+                    adiestramientos = JSON.parse(adiestramientos)
+                    adiestramientos.push(datos)
+                    localStorage.setItem('adiestramientos', JSON.stringify(adiestramientos))
+                } else {
+                    adiestramientos = []
+                    adiestramientos.push(datos)
+                    localStorage.setItem('adiestramientos', JSON.stringify(adiestramientos))
+                }
                 this.sincronizar(datos, 'post', '/adiestramiento/nuevo')
                     .then(response => {
                         console.log(response.data)
-                        this.$emit('open', 'adiestramiento')
+                        this.$root.$emit('open', 'adiestramiento')
                     });
             },
             borrar() {
@@ -93,10 +103,16 @@
             },
         },
         mounted() {
-            this.sincronizar({}, 'get', '/especies/mostrar')
-                .then(response => {
-                    this.especies = response.data;
-                });
+            if (localStorage.getItem('especies') == null) {
+                this.sincronizar({}, 'get', '/especies/mostrar')
+                    .then(response => {
+                        localStorage.setItem('especies', JSON.stringify(response.data));
+                        this.especies = response.data;
+                    });
+            } else {
+                this.especies = JSON.parse(localStorage.getItem('especies'));
+                console.log(this.especies);
+            }
 
             this.$nextTick(() => {
                 this.editor = CKEDITOR.replace( 'editor1' );
