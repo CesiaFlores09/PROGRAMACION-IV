@@ -7,15 +7,21 @@
         <div class="card-body">
             <div v-for="mascota in mascotas" class="row border-2 border-bottom border-secondary pb-2 rounded center-content hover-container d-flex justify-content-between align-items-center" :key="mascota.id" :class="{'d-none': !mascota.mostrar, 'border border-success': mascota.actual}">
                 <div class="row">
-                    <div class="col-md-6 center-content">
+                    <div class="col-md-4 center-content">
                         <p><b>{{ mascota.nombre }}</b></p>
                         <img :src="'storage/imagenes/mascotas/fotos/'+mascota.imagen" alt="" class="img-fluid" style="max-width: 100%;">
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <p><b>Color:</b> {{ mascota.color }}</p>
                         <p><b>Raza:</b> {{ mascota.raza }}</p>
                         <p><b>Edad:</b> {{ mascota.edad }}</p>
                         <p><b>Sexo:</b> {{ mascota.sexo }}</p>
+                    </div>
+                    <div class="col-md-4">
+                        <div :id="'cartilla'+mascota.id" class="col-md-4">
+                            <img :src="mascota.imgcartilla" alt="" class="img-fluid" style="max-width: 100%;">
+                        </div>
+
                     </div>
                 </div>
                 <div class="row">
@@ -67,6 +73,28 @@
 
                             this.mascotas.forEach(mascota => {
                                 mascota.mostrar = true;
+                            });
+
+                            this.mascotas.forEach(mascota => {
+                                let canva = document.createElement('canvas');
+                                canva.width = '300';
+                                canva.height = '300';
+                                let ctx = canva.getContext('2d');
+                                ctx.fillStyle = '#fff';
+                                ctx.fillRect(0, 0, 100, 100);
+                                ctx.strokeStyle = '#000';
+                                ctx.lineWidth = '1';
+                                ctx.font = `${(canva.width / mascota.cartilla[i].vacuna.length)}px Arial`;
+                                if (mascota.cartilla !== false) {
+                                    for (let i = 0; i < mascota.cartilla.length; i++) {
+                                        ctx.fillStyle = '#000';
+                                        ctx.fillText(`○ ${mascota.cartilla[i].vacuna}`, 20, 20 + (i * 10));
+                                    }
+                                } else {
+                                    ctx.fillText('No tiene cartilla', 20, 20);
+                                }
+                                img.src = canva.toDataURL();
+                                mascota.imgcartilla = img.src;
                             });
                         }
                     })

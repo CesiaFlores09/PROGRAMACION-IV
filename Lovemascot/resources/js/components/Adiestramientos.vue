@@ -8,7 +8,7 @@
             <p>{{ adiestramiento.titulo }}</p>
         </div>
         <div class="card-body">
-            <div class="row">
+            <div class="row pb-2">
                 <div class="col-sm-12">
                     <button class="btn btn-primary" @click="regresar()" v-if="step >= 1">Regresar</button>
                     <button class="btn btn-primary" @click="nuevoAdiestramiento()">Nuevo adiestramiento</button>
@@ -24,8 +24,8 @@
                 </div>
             </div>
             <div class="row" v-if="step == 1">
-                <div v-if="adiestramientos.length > 0">
-                    <div v-for="adiestramiento in adiestramientos" class="col-sm-6" :key="adiestramiento.id">
+                <div v-if="adiestramientos.length > 0" class="col-sm-6">
+                    <div v-for="adiestramiento in adiestramientos" class="col-sm-12" :key="adiestramiento.id">
                         <div class="card hover-container" @click="seleccionarAdiestramiento(adiestramiento)">
                             <div class="card-body">
                                 <h5 class="card-title">{{ adiestramiento.titulo }}</h5>
@@ -62,7 +62,7 @@
                 step: 0,
                 especies: [],
                 adiestramientos: [],
-                adiestramiento: {},
+                adiestramiento: {descripcion: ''},
             }
         },
         methods: {

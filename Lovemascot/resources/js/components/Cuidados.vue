@@ -24,8 +24,8 @@
                 </div>
             </div>
             <div class="row" v-if="step == 1">
-                <div v-if="cuidados.length > 0">
-                    <div v-for="cuidado in cuidados" class="col-sm-6" :key="cuidado.id">
+                <div v-if="cuidados.length > 0" class="col-sm-6">
+                    <div v-for="cuidado in cuidados" class="col-sm-12" :key="cuidado.id">
                         <div class="card hover-container" @click="seleccionarAdiestramiento(cuidado)">
                             <div class="card-body">
                                 <h5 class="card-title">{{ cuidado.titulo }}</h5>
@@ -82,7 +82,7 @@
                 this.step = 2;
                 this.cuidado = cuidado;
                 let el = document.getElementById('contenedor2');
-                el.innerHTML = cuidado.descripcion;
+                el.innerHTML = cuidado.consejo;
             },
             regresar() {
                 this.step -= 1;

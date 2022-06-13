@@ -44,7 +44,7 @@ class ConsejosController extends Controller
         $parametros = Request()->validate([
             'idEspecie' => 'required|integer',
             'titulo' => 'required|string',
-            'descripcion' => 'required|string',
+            'consejo' => 'required|string',
         ]);
         $consejo = Consejos::create($parametros);
         return response()->json(['id' => $consejo->id, 'titulo' => $consejo->titulo]);

@@ -5605,7 +5605,9 @@ __webpack_require__.r(__webpack_exports__);
       step: 0,
       especies: [],
       adiestramientos: [],
-      adiestramiento: {}
+      adiestramiento: {
+        descripcion: ''
+      }
     };
   },
   methods: {
@@ -5757,7 +5759,7 @@ __webpack_require__.r(__webpack_exports__);
       this.step = 2;
       this.cuidado = cuidado;
       var el = document.getElementById('contenedor2');
-      el.innerHTML = cuidado.descripcion;
+      el.innerHTML = cuidado.consejo;
     },
     regresar: function regresar() {
       this.step -= 1;
@@ -6113,6 +6115,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -6143,6 +6151,30 @@ __webpack_require__.r(__webpack_exports__);
 
           _this.mascotas.forEach(function (mascota) {
             mascota.mostrar = true;
+          });
+
+          _this.mascotas.forEach(function (mascota) {
+            var canva = document.createElement('canvas');
+            canva.width = '300';
+            canva.height = '300';
+            var ctx = canva.getContext('2d');
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(0, 0, 100, 100);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = '1';
+            ctx.font = "".concat(canva.width / mascota.cartilla[i].vacuna.length, "px Arial");
+
+            if (mascota.cartilla !== false) {
+              for (var _i = 0; _i < mascota.cartilla.length; _i++) {
+                ctx.fillStyle = '#000';
+                ctx.fillText("\u25CB ".concat(mascota.cartilla[_i].vacuna), 20, 20 + _i * 10);
+              }
+            } else {
+              ctx.fillText('No tiene cartilla', 20, 20);
+            }
+
+            img.src = canva.toDataURL();
+            mascota.imgcartilla = img.src;
           });
         }
       })["catch"](function (error) {
@@ -6831,8 +6863,19 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
   \*****************************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue");
+/* harmony import */ var _components_RegistrarMascota_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/RegistrarMascota.vue */ "./resources/js/components/RegistrarMascota.vue");
+/* harmony import */ var _components_MostrarMascota_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/MostrarMascota.vue */ "./resources/js/components/MostrarMascota.vue");
+/* harmony import */ var _components_ActualizarMascota_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/ActualizarMascota.vue */ "./resources/js/components/ActualizarMascota.vue");
+/* harmony import */ var _components_MisMatches_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/MisMatches.vue */ "./resources/js/components/MisMatches.vue");
+/* harmony import */ var _components_Adiestramientos_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/Adiestramientos.vue */ "./resources/js/components/Adiestramientos.vue");
+/* harmony import */ var _components_Cuidados_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/Cuidados.vue */ "./resources/js/components/Cuidados.vue");
+/* harmony import */ var _components_NuevoAdiestramiento_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/NuevoAdiestramiento.vue */ "./resources/js/components/NuevoAdiestramiento.vue");
+/* harmony import */ var _components_NuevoCuidado_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/NuevoCuidado.vue */ "./resources/js/components/NuevoCuidado.vue");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -6841,6 +6884,26 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js")["default"]);
+window.socketio = io('http://localhost:3000');
+socketio.on('connect', function (e) {
+  console.log('Conexion establecida');
+});
+
+if (!Notification) {
+  console.log('El navegadfor no soporta notificaciones');
+}
+
+window.permitirNotificaciones = 'default';
+
+if (Notification.permission !== "denied") {
+  Notification.requestPermission(function (status) {
+    console.log('Permiso de notificaciones:', status);
+    permitirNotificaciones = status;
+  });
+} else {
+  console.log('El usuario no acepto notificaciones');
+  permitirNotificaciones = 'denied';
+}
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -6850,16 +6913,26 @@ window.Vue = (__webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js
  */
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Vue.component('registro-mascota', require('./components/RegistrarMascota.vue').default);
+// Vue.component('mostrar-mascota', require('./components/MostrarMascota.vue').default);
+// Vue.component('actualizar-mascota', require('./components/ActualizarMascota.vue').default);
+// Vue.component('mis-matches', require('./components/MisMatches.vue').default);
+// Vue.component('adiestramiento', require('./components/Adiestramientos.vue').default);
+// Vue.component('cuidados', require('./components/Cuidados.vue').default);
+// Vue.component('nuevo-adiestramiento', require('./components/NuevoAdiestramiento.vue').default);
+// Vue.component('nuevo-cuidado', require('./components/NuevoCuidado.vue').default);
 
-Vue.component('example-component', (__webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]));
-Vue.component('registro-mascota', (__webpack_require__(/*! ./components/RegistrarMascota.vue */ "./resources/js/components/RegistrarMascota.vue")["default"]));
-Vue.component('mostrar-mascota', (__webpack_require__(/*! ./components/MostrarMascota.vue */ "./resources/js/components/MostrarMascota.vue")["default"]));
-Vue.component('actualizar-mascota', (__webpack_require__(/*! ./components/ActualizarMascota.vue */ "./resources/js/components/ActualizarMascota.vue")["default"]));
-Vue.component('mis-matches', (__webpack_require__(/*! ./components/MisMatches.vue */ "./resources/js/components/MisMatches.vue")["default"]));
-Vue.component('adiestramiento', (__webpack_require__(/*! ./components/Adiestramientos.vue */ "./resources/js/components/Adiestramientos.vue")["default"]));
-Vue.component('cuidados', (__webpack_require__(/*! ./components/Cuidados.vue */ "./resources/js/components/Cuidados.vue")["default"]));
-Vue.component('nuevo-adiestramiento', (__webpack_require__(/*! ./components/NuevoAdiestramiento.vue */ "./resources/js/components/NuevoAdiestramiento.vue")["default"]));
-Vue.component('nuevo-cuidado', (__webpack_require__(/*! ./components/NuevoCuidado.vue */ "./resources/js/components/NuevoCuidado.vue")["default"]));
+
+
+
+
+
+
+
+
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -6895,7 +6968,19 @@ var app = new Vue({
       nuevoCuidado: {
         mostrar: false
       }
-    }
+    },
+    usuario: {}
+  },
+  components: {
+    'example-component': _components_ExampleComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    'registro-mascota': _components_RegistrarMascota_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    'mostrar-mascota': _components_MostrarMascota_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    'actualizar-mascota': _components_ActualizarMascota_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
+    'mis-matches': _components_MisMatches_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
+    'adiestramiento': _components_Adiestramientos_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
+    'cuidados': _components_Cuidados_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    'nuevo-adiestramiento': _components_NuevoAdiestramiento_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+    'nuevo-cuidado': _components_NuevoCuidado_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
   },
   methods: {
     mostrarFormulario: function mostrarFormulario(formulario) {
@@ -6907,6 +6992,9 @@ var app = new Vue({
         }
       }
     }
+  },
+  mounted: function mounted() {
+    this.usuario = document.getElementById('usuario').innerHTML;
   },
   beforeMount: function beforeMount() {
     var _this = this;
@@ -31546,7 +31634,7 @@ var render = function () {
         ]),
     _vm._v(" "),
     _c("div", { staticClass: "card-body" }, [
-      _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "row pb-2" }, [
         _c("div", { staticClass: "col-sm-12" }, [
           _vm.step >= 1
             ? _c(
@@ -31617,10 +31705,11 @@ var render = function () {
             _vm.adiestramientos.length > 0
               ? _c(
                   "div",
+                  { staticClass: "col-sm-6" },
                   _vm._l(_vm.adiestramientos, function (adiestramiento) {
                     return _c(
                       "div",
-                      { key: adiestramiento.id, staticClass: "col-sm-6" },
+                      { key: adiestramiento.id, staticClass: "col-sm-12" },
                       [
                         _c(
                           "div",
@@ -31798,10 +31887,11 @@ var render = function () {
             _vm.cuidados.length > 0
               ? _c(
                   "div",
+                  { staticClass: "col-sm-6" },
                   _vm._l(_vm.cuidados, function (cuidado) {
                     return _c(
                       "div",
-                      { key: cuidado.id, staticClass: "col-sm-6" },
+                      { key: cuidado.id, staticClass: "col-sm-12" },
                       [
                         _c(
                           "div",
@@ -32476,7 +32566,7 @@ var render = function () {
           },
           [
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-md-6 center-content" }, [
+              _c("div", { staticClass: "col-md-4 center-content" }, [
                 _c("p", [_c("b", [_vm._v(_vm._s(mascota.nombre))])]),
                 _vm._v(" "),
                 _c("img", {
@@ -32489,7 +32579,7 @@ var render = function () {
                 }),
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
+              _c("div", { staticClass: "col-md-4" }, [
                 _c("p", [
                   _c("b", [_vm._v("Color:")]),
                   _vm._v(" " + _vm._s(mascota.color)),
@@ -32509,6 +32599,23 @@ var render = function () {
                   _c("b", [_vm._v("Sexo:")]),
                   _vm._v(" " + _vm._s(mascota.sexo)),
                 ]),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-4" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "col-md-4",
+                    attrs: { id: "cartilla" + mascota.id },
+                  },
+                  [
+                    _c("img", {
+                      staticClass: "img-fluid",
+                      staticStyle: { "max-width": "100%" },
+                      attrs: { src: mascota.imgcartilla, alt: "" },
+                    }),
+                  ]
+                ),
               ]),
             ]),
             _vm._v(" "),
