@@ -37,6 +37,7 @@
                         <button class="btn btn-danger" @click="rechazarMatch(mascota.id)" v-if="mascota.match == 'recibido' && mascota.estado == 0">Rechazar Match</button>
                         <button class="btn btn-danger" @click="rechazarMatch(mascota.id)" v-else-if="mascota.match == 'recibido' && mascota.estado == 1">Eliminar Match</button>
                         <button class="btn btn-danger" @click="cancelarMatch(mascota.id)" v-else-if="mascota.match == 'enviado' && mascota.estado == 1">Eliminar Match</button>
+                        <button class="btn btn-primary" @click="mensaje(mascota)">Enviar mensaje</button>
                     </div>
                 </div>
             </div>
@@ -75,27 +76,27 @@
                                 mascota.mostrar = true;
                             });
 
-                            this.mascotas.forEach(mascota => {
-                                let canva = document.createElement('canvas');
-                                canva.width = '300';
-                                canva.height = '300';
-                                let ctx = canva.getContext('2d');
-                                ctx.fillStyle = '#fff';
-                                ctx.fillRect(0, 0, 100, 100);
-                                ctx.strokeStyle = '#000';
-                                ctx.lineWidth = '1';
-                                ctx.font = `${(canva.width / mascota.cartilla[i].vacuna.length)}px Arial`;
-                                if (mascota.cartilla !== false) {
-                                    for (let i = 0; i < mascota.cartilla.length; i++) {
-                                        ctx.fillStyle = '#000';
-                                        ctx.fillText(`○ ${mascota.cartilla[i].vacuna}`, 20, 20 + (i * 10));
-                                    }
-                                } else {
-                                    ctx.fillText('No tiene cartilla', 20, 20);
-                                }
-                                img.src = canva.toDataURL();
-                                mascota.imgcartilla = img.src;
-                            });
+                            // this.mascotas.forEach(mascota => {
+                            //     let canva = document.createElement('canvas');
+                            //     canva.width = '300';
+                            //     canva.height = '300';
+                            //     let ctx = canva.getContext('2d');
+                            //     ctx.fillStyle = '#fff';
+                            //     ctx.fillRect(0, 0, 100, 100);
+                            //     ctx.strokeStyle = '#000';
+                            //     ctx.lineWidth = '1';
+                            //     ctx.font = `${(canva.width / mascota.cartilla[i].vacuna.length)}px Arial`;
+                            //     if (mascota.cartilla !== false) {
+                            //         for (let i = 0; i < mascota.cartilla.length; i++) {
+                            //             ctx.fillStyle = '#000';
+                            //             ctx.fillText(`○ ${mascota.cartilla[i].vacuna}`, 20, 20 + (i * 10));
+                            //         }
+                            //     } else {
+                            //         ctx.fillText('No tiene cartilla', 20, 20);
+                            //     }
+                            //     img.src = canva.toDataURL();
+                            //     mascota.imgcartilla = img.src;
+                            // });
                         }
                     })
                     .catch(error => {
@@ -106,7 +107,7 @@
                 if (confirm('¿Estas seguro de eliminar esta mascota?')) {
                     this.sincronizar({}, 'delete', '/mascotas/eliminar/' + id);
                     this.mascotas = this.mascotas.filter(mascota => mascota.id != id);
-                    this.$
+                    this.$emit('eliminar', id);
                 }
             },
             editarMascota(id) {
@@ -168,6 +169,9 @@
                     console.log(response.data);
                     this.sincronizar({}, 'get', '/mascotas/mostrar');
                 })
+            },
+            mensaje(para) {
+                this.$root.$emit('mensaje', para);
             }
         },
         mounted() {

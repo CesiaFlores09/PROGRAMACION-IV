@@ -19,8 +19,36 @@ let express = require('express'),
 socketio.on('connection', socket => {
     console.log('Conectado')
     socket.on('chat', data => {
-        socketio.emit(data.id, data.mensaje);
-        
+        mongodb.connect(url, (err, client) => {
+            console.log(data, typeof data);
+            if (err) console.log(err);
+            const db = client.db(dbName);
+            db.collection('chat').find({
+                $or: [
+                    { by: data.by, to: data.to },
+                    { by: data.to, to: data.by }
+            ]}).toArray((err, response) => {
+                if (err) console.log(err);
+                let sortids = [data.by, data.to].sort((a, b) => a - b);
+                socket.emit('chat_' + sortids.join('_'), response);
+            });
+        }); 
+    });
+    socket.on('sendMsg', data => {
+        mongodb.connect(url, (err, client) => {
+            if (err) console.log(err);
+            const db = client.db(dbName);
+            db.collection('chat').insertOne({
+                by: data.by,
+                to: data.to,
+                mensaje: data.mensaje,
+            }).then(response => {
+                console.log(data)
+                socket.emit('sendMsg_' + data.by + '_' + data.to, data);
+            }).catch(error => {
+                console.log(error);
+            }); 
+        });
     });
 });
 app.use(express.json());
