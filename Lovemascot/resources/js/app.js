@@ -55,6 +55,7 @@ import adiestramiento from './components/Adiestramientos.vue';
 import cuidados from './components/Cuidados.vue';
 import nuevoAdiestramiento from './components/NuevoAdiestramiento.vue';
 import nuevoCuidado from './components/NuevoCuidado.vue';
+import chat from './components/Chat.vue';
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -75,8 +76,10 @@ const app = new Vue({
             cuidados: {mostrar: false},
             nuevoAdiestramiento: {mostrar: false},
             nuevoCuidado: {mostrar: false},
+            chat: {mostrar: false}
         },
         usuario: {},
+        match: {},
     },
     components: {
         'example-component': example,
@@ -88,6 +91,7 @@ const app = new Vue({
         'cuidados': cuidados,
         'nuevo-adiestramiento': nuevoAdiestramiento,
         'nuevo-cuidado': nuevoCuidado,
+        'chat': chat
     },
     methods: {
         mostrarFormulario(formulario) {
@@ -126,6 +130,10 @@ const app = new Vue({
             this.formularios.mostrarMascota.mostrar = false;
             this.formularios.actualizarMascota.mostrar = true;
             this.mascota = value;
+        });
+        this.$root.$on('mensaje', (value) => {
+            this.match = value;
+            this.mostrarFormulario('chat');
         });
     }
 });
